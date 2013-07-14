@@ -1,7 +1,24 @@
 Code.require_file "test_helper.exs", __DIR__
 
+defmodule Pi do
+  use Exredis
+
+  def get do
+    start |> query ["GET", "Pi"]
+  end
+
+  def set do
+    start |> query ["SET", "Pi", "3.14"]
+  end
+end
+
 defmodule ExredisTest do
   use ExUnit.Case, async: true
+
+  test "mixin" do
+    assert Pi.set == "OK"
+    assert Pi.get == "3.14"
+  end
 
   test "connect / disconnect" do
     client = Exredis.start

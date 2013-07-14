@@ -3,6 +3,13 @@ defmodule Exredis do
   Wrapper for eredis
   """
 
+  @doc false
+  defmacro __using__(_opts) do
+    quote do
+      import Exredis
+    end
+  end
+
   @doc """
   Connect to the Redis server:
 
