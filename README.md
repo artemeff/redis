@@ -1,4 +1,6 @@
-### exredis - Redis client for Elixir
+## exredis [![Build Status](https://travis-ci.org/artemeff/exredis.png?branch=master)](https://travis-ci.org/artemeff/exredis)
+
+Redis client for Elixir
 
 ### Installation
 
