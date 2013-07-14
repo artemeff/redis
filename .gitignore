@@ -1,0 +1,8 @@
+/ebin
+/deps
+erl_crash.dump
+*.ez
+
+# OS
+.DS_Store
+Icon?
