@@ -1,6 +1,6 @@
-# exredis - Redis client for Elixir
+### exredis - Redis client for Elixir
 
-## Install
+### Installation
 
 Add this to the dependencies:
 
@@ -8,15 +8,15 @@ Add this to the dependencies:
 { :exredis, "0.0.1", [ github: "artemeff/exredis", tag: "0.0.1" ] }
 ```
 
-## Usage
+### Usage
 
-### Connect to the Redis server
+__Connect to the Redis server__
 
 ```elixir
 client = Exredis.start
 ```
 
-### Set & Get
+__Set & Get__
 
 ```elixir
 # set
@@ -27,7 +27,7 @@ Exredis.query(client, ["GET", "FOO"])
 # => "BAR"
 ```
 
-### Mset & Mget
+__Mset & Mget__
 
 ```elixir
 # mset
@@ -38,7 +38,7 @@ Exredis.query(client, ["MGET" | ["key1", "key2", "key3"]])
 # => ["value1","value2","value3"]
 ```
 
-### Transactions
+__Transactions__
 
 ```elixir
 # start
@@ -50,20 +50,20 @@ Exredis.query(client, ["SET", "bar", "baz"])
 Exredis.query(client, ["EXEC"])
 ```
 
-### Pipelining (maybe won't work)
+__Pipelining (maybe won't work)__
 
 ```elixir
 Exredis.query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]])
 ```
 
-### Pub/sub (maybe won't work)
+__Pub/sub (maybe won't work)__
 
 ```elixir
 Exredis.subscribe(client, "foo")
 Exredis.publish(client, "foo", "bar")
 ```
 
-## Contributing
+### Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
