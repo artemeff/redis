@@ -26,13 +26,8 @@ __As mixin__
 defmodule Pi do
   use Exredis
 
-  def get do
-    start |> query ["GET", "Pi"]
-  end
-
-  def set do
-    start |> query ["SET", "Pi", "3.14"]
-  end
+  def get, do: start |> query ["GET", "Pi"]
+  def set, do: start |> query ["SET", "Pi", "3.14"]
 end
 
 Pi.set
