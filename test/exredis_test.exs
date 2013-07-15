@@ -68,7 +68,6 @@ defmodule ExredisTest do
     assert values == ["bar", "baz"]
   end
 
-  # TODO fix test
   test "pipelining" do
     query  = [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]]
     client = Exredis.start

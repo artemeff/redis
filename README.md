@@ -79,7 +79,7 @@ Exredis.query(client, ["SET", "bar", "baz"])
 Exredis.query(client, ["EXEC"])
 ```
 
-__Pipelining (maybe won't work)__
+__Pipelining__
 
 ```elixir
 Exredis.query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]])
