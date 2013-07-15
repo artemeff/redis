@@ -1,6 +1,6 @@
 defmodule Exredis do
   @moduledoc """
-  Wrapper for eredis
+  Redis client for Elixir
   """
 
   @doc false
