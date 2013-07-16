@@ -15,6 +15,14 @@ end
 defmodule ExredisTest do
   use ExUnit.Case, async: true
 
+  # clear all redis keys
+  setup_all do
+    client = Exredis.start
+
+    Exredis.query client, ["FLUSHALL"]
+    Exredis.stop client
+  end
+
   test "mixin" do
     assert Pi.set == "OK"
     assert Pi.get == "3.14"
