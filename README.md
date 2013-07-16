@@ -43,6 +43,12 @@ __Connect to the Redis server__
 client = Exredis.start
 ```
 
+__Disconnect from the server__
+
+```elixir
+Exredis.stop client
+```
+
 __Set & Get__
 
 ```elixir
@@ -85,11 +91,49 @@ __Pipelining__
 Exredis.query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]])
 ```
 
-__Pub/sub (maybe won't work)__
+__Pub/sub__
 
 ```elixir
-Exredis.subscribe(client, "foo")
-Exredis.publish(client, "foo", "bar")
+# subscribe, early documentation
+# api should be improve, for now it's ugly
+
+# define callback
+def sub_callback(client, main_pid) do
+  receive do
+    msg ->
+      case msg do
+        {:subscribed, _channel, _pid} ->
+          #IO.inspect channel
+          #IO.inspect pid
+          main_pid <- "connect"
+
+        {:message, _channel, msg, _pid} ->
+          #IO.inspect channel
+          #IO.inspect msg
+          #IO.inspect pid
+          main_pid <- "message #{msg}"
+
+        _other -> nil
+      end
+
+      Exredis.Sub.ack_message client
+      sub_callback client, main_pid
+  end
+end
+
+# start client for subscribe
+client_sub = Exredis.Sub.start
+
+# subscribe!
+Exredis.Sub.subscribe(client_sub, "foo", callback, Kernel.self)
+
+# receive messages
+receive do
+  msg -> IO.inspect msg
+end
+
+# publish
+Exredis.Sub.publish(client, "foo", "bar")
 ```
 
 ---

@@ -3,12 +3,32 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule Pi do
   use Exredis
 
-  def get do
-    start |> query ["GET", "Pi"]
-  end
+  # set/get
+  def get, do: start |> query ["GET", "Pi"]
+  def set, do: start |> query ["SET", "Pi", "3.14"]
 
-  def set do
-    start |> query ["SET", "Pi", "3.14"]
+  # subscribe callback
+  def sub_callback(client, main_pid) do
+    receive do
+      msg ->
+        case msg do
+          {:subscribed, _channel, _pid} ->
+            #IO.inspect channel
+            #IO.inspect pid
+            main_pid <- "connect"
+
+          {:message, _channel, msg, _pid} ->
+            #IO.inspect channel
+            #IO.inspect msg
+            #IO.inspect pid
+            main_pid <- "message #{msg}"
+
+          _other -> nil
+        end
+
+        Exredis.Sub.ack_message client
+        Pi.sub_callback client, main_pid
+    end
   end
 end
 
@@ -85,12 +105,20 @@ defmodule ExredisTest do
   end
 
   test "pub/sub" do
-    client = Exredis.start
+    client_sub = Exredis.Sub.start
+    client_pub = Exredis.start
+    callback   = function(Pi, :sub_callback, 2)
 
-    status = Exredis.subscribe(client, "foo")
-    assert status == :ok
+    Exredis.Sub.subscribe(client_sub, "foo", callback, Kernel.self)
+    
+    receive do
+      msg -> assert msg == "connect"
+    end
 
-    status = Exredis.publish(client, "foo", "bar")
-    assert status == "0"
+    Exredis.Sub.publish(client_pub, "foo", "bar")
+
+    receive do
+      msg -> assert msg == "message bar"
+    end
   end
 end

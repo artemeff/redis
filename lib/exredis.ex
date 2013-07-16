@@ -50,20 +50,4 @@ defmodule Exredis do
   def query_pipe(client, command) when is_pid(client) and is_list(command),
     do: :eredis.qp(client, command)
 
-  @doc """
-  Subscribe to a channel
-
-  `subscribe client, "some_channel"`
-  """
-  def subscribe(client, channel) when is_pid(client) and is_binary(channel),
-    do: :eredis_sub.subscribe(client, channel)
-
-  @doc """
-  Publish to the channel
-
-  `publish client, "some_channel", "Hello World!"`
-  """
-  def publish(client, channel, message) when is_pid(client) and is_binary(channel) and is_binary(message),
-    do: query(client, ["PUBLISH", channel, message])
-
 end
