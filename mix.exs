@@ -15,7 +15,7 @@ defmodule Exredis.Mixfile do
   # Dependencies
   defp deps do
     [
-      { :eredis, "1.0.5", [ github: "wooga/eredis", tag: "v1.0.5" ] }
+      { :eredis, "1.0.6", [ github: "wooga/eredis", tag: "v1.0.6" ] }
     ]
   end
 end
