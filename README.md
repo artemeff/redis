@@ -116,6 +116,9 @@ def sub_callback(client, main_pid) do
   end
 end
 
+# sub_callback as anonymous function
+callback = function(sub_callback/2)
+
 # start client for subscribe
 client_sub = Exredis.Sub.start
 
