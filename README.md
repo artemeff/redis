@@ -103,14 +103,9 @@ def sub_callback(client, main_pid) do
     msg ->
       case msg do
         {:subscribed, _channel, _pid} ->
-          #IO.inspect channel
-          #IO.inspect pid
           main_pid <- "connect"
 
         {:message, _channel, msg, _pid} ->
-          #IO.inspect channel
-          #IO.inspect msg
-          #IO.inspect pid
           main_pid <- "message #{msg}"
 
         _other -> nil
