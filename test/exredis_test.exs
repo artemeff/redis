@@ -103,22 +103,4 @@ defmodule ExredisTest do
     status = Exredis.query_pipe(client, query)
     assert status == [ok: "OK", ok: "1", ok: "2"]
   end
-
-  test "pub/sub" do
-    client_sub = Exredis.Sub.start
-    client_pub = Exredis.start
-    callback   = function(Pi, :sub_callback, 2)
-
-    Exredis.Sub.subscribe(client_sub, "foo", callback, Kernel.self)
-    
-    receive do
-      msg -> assert msg == "connect"
-    end
-
-    Exredis.Sub.publish(client_pub, "foo", "bar")
-
-    receive do
-      msg -> assert msg == "message bar"
-    end
-  end
 end
