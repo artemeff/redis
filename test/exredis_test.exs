@@ -6,30 +6,6 @@ defmodule Pi do
   # set/get
   def get, do: start |> query ["GET", "Pi"]
   def set, do: start |> query ["SET", "Pi", "3.14"]
-
-  # subscribe callback
-  def sub_callback(client, main_pid) do
-    receive do
-      msg ->
-        case msg do
-          {:subscribed, _channel, _pid} ->
-            #IO.inspect channel
-            #IO.inspect pid
-            main_pid <- "connect"
-
-          {:message, _channel, msg, _pid} ->
-            #IO.inspect channel
-            #IO.inspect msg
-            #IO.inspect pid
-            main_pid <- "message #{msg}"
-
-          _other -> nil
-        end
-
-        Exredis.Sub.ack_message client
-        Pi.sub_callback client, main_pid
-    end
-  end
 end
 
 defmodule ExredisTest do
