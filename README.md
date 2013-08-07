@@ -90,44 +90,55 @@ Exredis.query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, 
 __Pub/sub__
 
 ```elixir
-# subscribe, early documentation
-# api should be improve, for now it's ugly
+use Exredis.Sub
 
-# define callback
-def sub_callback(client, main_pid) do
-  receive do
-    msg ->
-      case msg do
-        {:subscribed, _channel, _pid} ->
-          main_pid <- "connect"
+client_sub = start
+client = Exredis.start
+pid = Kernel.self
 
-        {:message, _channel, msg, _pid} ->
-          main_pid <- "message #{msg}"
-
-        _other -> nil
-      end
-
-      Exredis.Sub.ack_message client
-      sub_callback client, main_pid
-  end
+client_sub |> subscribe "foo", fn(msg) ->
+  pid <- msg
 end
 
-# sub_callback as anonymous function
-callback = function(sub_callback/2)
-
-# start client for subscribe
-client_sub = Exredis.Sub.start
-
-# subscribe!
-Exredis.Sub.subscribe(client_sub, "foo", callback, Kernel.self)
-
-# receive messages
 receive do
-  msg -> IO.inspect msg
+  msg ->
+    IO.inspect msg
+    # => { :subscribed, "foo", #PID<0.85.0> }
 end
 
-# publish
-Exredis.Sub.publish(client, "foo", "bar")
+client |> publish "foo", "Hello World!"
+
+receive do
+  msg ->
+    IO.inspect msg
+    # => { :message, "foo", "Hello World!", #PID<0.85.0> }
+end
+```
+
+__Pub/sub by a pattern__
+
+```elixir
+client_sub = start
+client = Exredis.start
+pid = Kernel.self
+
+client_sub |> psubscribe "bar_*", fn(msg) ->
+  pid <- msg
+end
+
+receive do
+  msg ->
+    IO.inspect msg
+    # => { :subscribed, "bar_*", #PID<0.104.0> }
+end
+
+client |> publish "bar_test", "Hello World!"
+
+receive do
+  msg ->
+    IO.inspect msg
+    # => { :pmessage, "bar_*", "bar_test", "Hello World!", #PID<0.104.0> }
+end
 ```
 
 ---
