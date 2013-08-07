@@ -34,10 +34,10 @@ defmodule Exredis do
   @doc """
   Make query
 
-  * `query client, ["SET", "foo", "bar"]`
-  * `query client, ["GET", "foo"]`
-  * `query client, ["MSET" | ["key1", "value1", "key2", "value2", "key3", "value3"]]`
-  * `query client, ["MGET" | ["key1", "key2", "key3"]]`
+  * `query(client, ["SET", "foo", "bar"])`
+  * `query(client, ["GET", "foo"])`
+  * `query(client, ["MSET" | ["key1", "value1", "key2", "value2", "key3", "value3"]])`
+  * `query(client, ["MGET" | ["key1", "key2", "key3"]])`
 
   See more commands in official Redis documentation
   """
@@ -46,6 +46,8 @@ defmodule Exredis do
 
   @doc """
   Pipeline query
+
+  `query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]])`
   """
   def query_pipe(client, command) when is_pid(client) and is_list(command),
     do: :eredis.qp(client, command)
