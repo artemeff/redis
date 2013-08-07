@@ -2,14 +2,13 @@ Code.require_file "test_helper.exs", __DIR__
 
 defmodule PubsubTest do
   use ExUnit.Case
-  use Exredis.Sub
 
   test "pub/sub" do
-    client_sub = start
+    client_sub = Exredis.Sub.start
     client = Exredis.start
     pid = Kernel.self
     
-    client_sub |> subscribe "foo", fn(msg) ->
+    client_sub |> Exredis.Sub.subscribe "foo", fn(msg) ->
       pid <- msg
     end
 
@@ -19,7 +18,7 @@ defmodule PubsubTest do
         assert (msg |> elem 1) == "foo"
     end
 
-    client |> publish "foo", "Hello World!"
+    client |> Exredis.Sub.publish "foo", "Hello World!"
 
     receive do
       msg ->
@@ -30,11 +29,11 @@ defmodule PubsubTest do
   end
 
   test "pub/sub by a pattern" do
-    client_sub = start
+    client_sub = Exredis.Sub.start
     client = Exredis.start
     pid = Kernel.self
     
-    client_sub |> psubscribe "bar_*", fn(msg) ->
+    client_sub |> Exredis.Sub.psubscribe "bar_*", fn(msg) ->
       pid <- msg
     end
 
@@ -44,7 +43,7 @@ defmodule PubsubTest do
         assert (msg |> elem 1) == "bar_*"
     end
 
-    client |> publish "bar_test", "Hello World!"
+    client |> Exredis.Sub.publish "bar_test", "Hello World!"
 
     receive do
       msg ->

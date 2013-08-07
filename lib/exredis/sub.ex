@@ -9,7 +9,6 @@ defmodule Exredis.Sub do
   defmacro __using__(_opts) do
     quote do
       import Exredis.Sub
-      require Exredis.Sub
     end
   end
 
@@ -44,17 +43,11 @@ defmodule Exredis.Sub do
   * `subscribe(client, "some_channel", fn(msg) -> ... end)`
   """
   @spec subscribe(pid, binary, term) :: any
-  defmacro subscribe(client, channel, term) do
-    quote do
-      client = unquote(client)
-      channel = unquote(channel)
-      term = unquote(term)
-
-      spawn_link fn ->
-        :eredis_sub.controlling_process client
-        :eredis_sub.subscribe client, [channel]
-        receiver(client, term)
-      end
+  def subscribe(client, channel, term) do
+    spawn_link fn ->
+      :eredis_sub.controlling_process client
+      :eredis_sub.subscribe client, [channel]
+      receiver(client, term)
     end
   end
 
@@ -64,17 +57,11 @@ defmodule Exredis.Sub do
   * `psubscribe(client, "some_channel_*", fn(msg) -> ... end)`
   """
   @spec psubscribe(pid, binary, term) :: any
-  defmacro psubscribe(client, channel, term) do
-    quote do
-      client = unquote(client)
-      channel = unquote(channel)
-      term = unquote(term)
-
-      spawn_link fn ->
-        :eredis_sub.controlling_process client
-        :eredis_sub.psubscribe client, [channel]
-        receiver(client, term)
-      end
+  def psubscribe(client, channel, term) do
+    spawn_link fn ->
+      :eredis_sub.controlling_process client
+      :eredis_sub.psubscribe client, [channel]
+      receiver(client, term)
     end
   end
 
@@ -88,16 +75,12 @@ defmodule Exredis.Sub do
     when is_pid(client) and is_binary(channel) and is_binary(message), do:
     query(client, ["PUBLISH", channel, message])
 
-  ##
-  # Internal methods
-  ##
-
   @doc false
-  def ack_message(client) when is_pid(client), do:
+  defp ack_message(client) when is_pid(client), do:
     :eredis_sub.ack_message(client)
 
   @doc false
-  def receiver(pid, callback) do
+  defp receiver(pid, callback) do
     receive do
       msg ->
         ack_message(pid)

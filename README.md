@@ -9,7 +9,7 @@ Redis client for Elixir
 Add this to the dependencies:
 
 ```elixir
-{ :exredis, "0.0.3", [ github: "artemeff/exredis", tag: "v0.0.3" ] }
+{ :exredis, "0.0.4", [ github: "artemeff/exredis", tag: "v0.0.4" ] }
 ```
 
 ---
@@ -90,13 +90,11 @@ Exredis.query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, 
 __Pub/sub__
 
 ```elixir
-use Exredis.Sub
-
-client_sub = start
+client_sub = Exredis.Sub.start
 client = Exredis.start
 pid = Kernel.self
 
-client_sub |> subscribe "foo", fn(msg) ->
+client_sub |> Exredis.Sub.subscribe "foo", fn(msg) ->
   pid <- msg
 end
 
@@ -106,7 +104,7 @@ receive do
     # => { :subscribed, "foo", #PID<0.85.0> }
 end
 
-client |> publish "foo", "Hello World!"
+client |> Exredis.Sub.publish "foo", "Hello World!"
 
 receive do
   msg ->
@@ -118,11 +116,11 @@ end
 __Pub/sub by a pattern__
 
 ```elixir
-client_sub = start
+client_sub = Exredis.Sub.start
 client = Exredis.start
 pid = Kernel.self
 
-client_sub |> psubscribe "bar_*", fn(msg) ->
+client_sub |> Exredis.Sub.psubscribe "bar_*", fn(msg) ->
   pid <- msg
 end
 
@@ -132,7 +130,7 @@ receive do
     # => { :subscribed, "bar_*", #PID<0.104.0> }
 end
 
-client |> publish "bar_test", "Hello World!"
+client |> Exredis.Sub.publish "bar_test", "Hello World!"
 
 receive do
   msg ->
