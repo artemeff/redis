@@ -12,18 +12,36 @@ defmodule Exredis.Sub do
     end
   end
 
+  @type reconnect_sleep :: :no_reconnect | integer
+  @type max_queue_size  :: :infinity | integer
+  @type queue_behaviour :: :drop | :exit
+  @type start_link      :: { :ok, pid } | { :error, term }
+
+  @doc """
+  Connect to the Redis server for subscribe to the channel
+
+  * `start_link`
+  * `start_link('127.0.0.1', 6379)`
+  * `start_link('127.0.0.1', 6379, 'with_password')`
+  """
+  @spec start_link(list, integer, list, reconnect_sleep, max_queue_size, queue_behaviour) :: start_link
+  def start_link(host // '127.0.0.1', port // 6379, password // '',
+            reconnect_sleep // :no_reconnect, max_queue_size // :infinity,
+            queue_behaviour // :drop), do:
+
+    :eredis_sub.start_link(host, port, password, reconnect_sleep, max_queue_size, queue_behaviour)
+
   @doc """
   Connect to the Redis server for subscribe to the channel
 
   * `start`
   * `start('127.0.0.1', 6379)`
   * `start('127.0.0.1', 6379, 'with_password')`
-
-  IP should be a list - single quotes instead of double
   """
+  @spec start(list, integer, list, reconnect_sleep, max_queue_size, queue_behaviour) :: pid
   def start(host // '127.0.0.1', port // 6379, password // '',
             reconnect_sleep // :no_reconnect, max_queue_size // :infinity,
-            queue_behaviour // :drop) when is_list(host) and is_integer(port), do:
+            queue_behaviour // :drop), do:
 
     :eredis_sub.start_link(host, port, password, reconnect_sleep, max_queue_size, queue_behaviour)
     |> elem 1
@@ -35,7 +53,8 @@ defmodule Exredis.Sub do
 
   Client is a pid getting from start command
   """
-  def stop(client) when is_pid(client), do: :eredis_sub.stop(client)
+  @spec stop(pid) :: :ok
+  def stop(client), do: :eredis_sub.stop(client)
 
   @doc """
   Subscribe to a channel
@@ -71,15 +90,15 @@ defmodule Exredis.Sub do
 
   * `publish(client, "some_channel", "Hello World!")`
   """
-  def publish(client, channel, message)
-    when is_pid(client) and is_binary(channel) and is_binary(message), do:
+  @spec publish(pid, binary, binary) :: any
+  def publish(client, channel, message), do:
     query(client, ["PUBLISH", channel, message])
 
-  @doc false
+  @spec ack_message(pid) :: any
   defp ack_message(client) when is_pid(client), do:
     :eredis_sub.ack_message(client)
 
-  @doc false
+  @spec receiver(pid, term) :: any
   defp receiver(pid, callback) do
     receive do
       msg ->

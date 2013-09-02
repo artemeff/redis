@@ -16,6 +16,7 @@ defmodule PubsubTest do
       msg ->
         assert (msg |> elem 0) == :subscribed
         assert (msg |> elem 1) == "foo"
+
     end
 
     client |> Exredis.Sub.publish "foo", "Hello World!"
@@ -25,6 +26,7 @@ defmodule PubsubTest do
         assert (msg |> elem 0) == :message
         assert (msg |> elem 1) == "foo"
         assert (msg |> elem 2) == "Hello World!"
+        
     end
   end
 
@@ -41,6 +43,7 @@ defmodule PubsubTest do
       msg ->
         assert (msg |> elem 0) == :subscribed
         assert (msg |> elem 1) == "bar_*"
+
     end
 
     client |> Exredis.Sub.publish "bar_test", "Hello World!"
@@ -51,6 +54,7 @@ defmodule PubsubTest do
         assert (msg |> elem 1) == "bar_*"
         assert (msg |> elem 2) == "bar_test"
         assert (msg |> elem 3) == "Hello World!"
+
     end
   end
 end

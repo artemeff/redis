@@ -11,46 +11,72 @@ end
 defmodule ExredisTest do
   use ExUnit.Case, async: true
 
-  # clear all redis keys
-  setup_all do
+  setup do
     client = Exredis.start
 
-    Exredis.query client, ["FLUSHALL"]
-    Exredis.stop client
+    # clean up database
+    client |> Exredis.query ["FLUSHALL"]
+    client |> Exredis.query ["SET", "key", "value"]
+
+    { :ok, [c: client] }
   end
 
-  test "mixin" do
-    assert Pi.set == "OK"
+  teardown ctx, do:
+    ctx[:c] |> Exredis.stop
+
+
+  test "mixin Pi.get", ctx do
+    ctx[:c] |> Exredis.query ["SET", "Pi", "3.14"]
+
     assert Pi.get == "3.14"
   end
 
-  test "connect / disconnect" do
-    client = Exredis.start
-    assert is_pid(client)
+  test "mixin Pi.set", ctx do
+    Pi.set
 
-    status = Exredis.stop(client)
-    assert status == :ok
+    assert (ctx[:c] |> Exredis.query ["GET", "Pi"]) == "3.14"
   end
 
-  test "SET / GET" do
-    client = Exredis.start
-
-    status = Exredis.query(client, ["SET", "FOO", "BAR"])
-    assert status == "OK"
-
-    status = Exredis.query(client, ["GET", "FOO"])
-    assert status == "BAR"
+  test "connect" do
+    assert Exredis.start |> is_pid
   end
 
-  test "MSET / MGET" do
-    values = ["key1", "value1", "key2", "value2", "key3", "value3"]
-    client = Exredis.start
+  test "connect, erlang way" do
+    { :ok, pid } = Exredis.start_link
 
-    status = Exredis.query(client, ["MSET" | values])
-    assert status == "OK"
+    assert pid |> is_pid
+  end
 
-    values = Exredis.query(client, ["MGET" | ["key1", "key2", "key3"]])
-    assert values == ["value1", "value2", "value3"]
+  test "disconnect" do
+    assert (Exredis.start |> Exredis.stop) == :ok
+  end
+
+  test "set returns OK", ctx do
+    assert (ctx[:c] |> Exredis.query ["SET", "foo", "bar"]) == "OK"
+  end
+
+  test "set works", ctx do
+    ctx[:c] |> Exredis.query ["SET", "foo", "bar"]
+
+    assert (ctx[:c] |> Exredis.query ["GET", "foo"]) == "bar"
+  end
+
+  test "get", ctx do
+    assert (ctx[:c] |> Exredis.query ["GET", "key"]) == "value"
+  end
+
+  test "mset returns OK", ctx do
+    values = ["key1", "value1", "key2", "value2"]
+
+    assert (ctx[:c] |> Exredis.query ["MSET" | values]) == "OK"
+  end
+
+  test "mset works", ctx do
+    ctx[:c] |> Exredis.query ["MSET" | ["key1", "value1", "key2", "value2"]]
+
+    values = ctx[:c] |> Exredis.query ["MGET" | ["key1", "key2"]]
+
+    assert values == ["value1", "value2"]
   end
 
   test "transactions" do
