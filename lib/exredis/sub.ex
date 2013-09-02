@@ -3,7 +3,6 @@ defmodule Exredis.Sub do
   Subscribe functions for exredis
   """
 
-  import Exredis, only: [query: 2]
 
   @doc false
   defmacro __using__(_opts) do
