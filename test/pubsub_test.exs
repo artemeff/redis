@@ -19,7 +19,7 @@ defmodule PubsubTest do
 
     end
 
-    client |> Exredis.Sub.publish "foo", "Hello World!"
+    client |> Exredis.publish "foo", "Hello World!"
 
     receive do
       msg ->
@@ -46,7 +46,7 @@ defmodule PubsubTest do
 
     end
 
-    client |> Exredis.Sub.publish "bar_test", "Hello World!"
+    client |> Exredis.publish "bar_test", "Hello World!"
 
     receive do
       msg ->

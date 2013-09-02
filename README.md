@@ -104,7 +104,7 @@ receive do
     # => { :subscribed, "foo", #PID<0.85.0> }
 end
 
-client |> Exredis.Sub.publish "foo", "Hello World!"
+client |> Exredis.publish "foo", "Hello World!"
 
 receive do
   msg ->
@@ -130,7 +130,7 @@ receive do
     # => { :subscribed, "bar_*", #PID<0.104.0> }
 end
 
-client |> Exredis.Sub.publish "bar_test", "Hello World!"
+client |> Exredis.publish "bar_test", "Hello World!"
 
 receive do
   msg ->

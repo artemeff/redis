@@ -84,16 +84,6 @@ defmodule Exredis.Sub do
     end
   end
 
-  @doc """
-  Publish to the channel, client should be started from
-  regular exredis method: `Exredis.start`
-
-  * `publish(client, "some_channel", "Hello World!")`
-  """
-  @spec publish(pid, binary, binary) :: any
-  def publish(client, channel, message), do:
-    query(client, ["PUBLISH", channel, message])
-
   @spec ack_message(pid) :: any
   defp ack_message(client) when is_pid(client), do:
     :eredis_sub.ack_message(client)
