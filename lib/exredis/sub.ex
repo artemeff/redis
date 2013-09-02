@@ -3,8 +3,6 @@ defmodule Exredis.Sub do
   Subscribe functions for exredis
   """
 
-
-  @doc false
   defmacro __using__(_opts) do
     quote do
       import Exredis.Sub

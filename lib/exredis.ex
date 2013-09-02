@@ -3,7 +3,6 @@ defmodule Exredis do
   Redis client for Elixir
   """
 
-  @doc false
   defmacro __using__(_opts) do
     quote do
       import Exredis
