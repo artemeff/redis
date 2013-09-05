@@ -40,22 +40,24 @@ __Connect to the Redis server__
 
 ```elixir
 client = Exredis.start
+# or
+{ :ok, client } = Exredis.start_link
 ```
 
 __Disconnect from the server__
 
 ```elixir
-Exredis.stop client
+client |> Exredis.stop
 ```
 
 __Set & Get__
 
 ```elixir
 # set
-Exredis.query(client, ["SET", "FOO", "BAR"])
+client |> Exredis.query ["SET", "FOO", "BAR"]
 
 # get
-Exredis.query(client, ["GET", "FOO"])
+client |> Exredis.query ["GET", "FOO"]
 # => "BAR"
 ```
 
@@ -63,31 +65,31 @@ __Mset & Mget__
 
 ```elixir
 # mset
-Exredis.query(client, ["MSET" | ["key1", "value1", "key2", "value2", "key3", "value3"]])
+client |> Exredis.query ["MSET" | ["key1", "value1", "key2", "value2", "key3", "value3"]]
 
 # mget
-Exredis.query(client, ["MGET" | ["key1", "key2", "key3"]])
-# => ["value1","value2","value3"]
+client |> Exredis.query ["MGET" | ["key1", "key2", "key3"]]
+# => ["value1", "value2", "value3"]
 ```
 
 __Transactions__
 
 ```elixir
 # start
-Exredis.query(client, ["MULTI"])
+client |> Exredis.query ["MULTI"]
 
 # exec
-Exredis.query(client, ["SET", "foo", "bar"])
-Exredis.query(client, ["SET", "bar", "baz"])
+client |> Exredis.query ["SET", "foo", "bar"]
+client |> Exredis.query ["SET", "bar", "baz"]
 
 # commit
-Exredis.query(client, ["EXEC"])
+client |> Exredis.query ["EXEC"]
 ```
 
 __Pipelining__
 
 ```elixir
-Exredis.query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]])
+client |> Exredis.query_pipe [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]]
 ```
 
 __Pub/sub__
@@ -107,7 +109,7 @@ receive do
     # => { :subscribed, "foo", #PID<0.85.0> }
 end
 
-client |> Exredis.publish "foo", "Hello World!"
+client |> Exredis.Api.publish "foo", "Hello World!"
 
 receive do
   msg ->
@@ -133,7 +135,7 @@ receive do
     # => { :subscribed, "bar_*", #PID<0.104.0> }
 end
 
-client |> Exredis.publish "bar_test", "Hello World!"
+client |> Exredis.Api.publish "bar_test", "Hello World!"
 
 receive do
   msg ->
