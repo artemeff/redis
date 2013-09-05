@@ -10,6 +10,9 @@ Add this to the dependencies:
 
 ```elixir
 { :exredis, "0.0.4", [ github: "artemeff/exredis", tag: "v0.0.4" ] }
+
+# edge
+{ :exredis, github: "artemeff/exredis" }
 ```
 
 ---
