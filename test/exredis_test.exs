@@ -10,23 +10,24 @@ end
 
 defmodule ExredisTest do
   use ExUnit.Case, async: true
+  alias Exredis, as: E
 
   setup do
-    client = Exredis.start
+    client = E.start
 
-    # clean up database
-    client |> Exredis.query ["FLUSHALL"]
-    client |> Exredis.query ["SET", "key", "value"]
+    # clean up database and set test value
+    client |> E.query ["FLUSHALL"]
+    client |> E.query ["SET", "key", "value"]
 
     { :ok, [c: client] }
   end
 
   teardown ctx, do:
-    ctx[:c] |> Exredis.stop
+    ctx[:c] |> E.stop
 
 
   test "mixin Pi.get", ctx do
-    ctx[:c] |> Exredis.query ["SET", "Pi", "3.14"]
+    ctx[:c] |> E.query ["SET", "Pi", "3.14"]
 
     assert Pi.get == "3.14"
   end
@@ -34,75 +35,75 @@ defmodule ExredisTest do
   test "mixin Pi.set", ctx do
     Pi.set
 
-    assert (ctx[:c] |> Exredis.query ["GET", "Pi"]) == "3.14"
+    assert (ctx[:c] |> E.query ["GET", "Pi"]) == "3.14"
   end
 
   test "connect" do
-    assert Exredis.start |> is_pid
+    assert E.start |> is_pid
   end
 
   test "connect, erlang way" do
-    { :ok, pid } = Exredis.start_link
+    { :ok, pid } = E.start_link
 
     assert pid |> is_pid
   end
 
   test "disconnect" do
-    assert (Exredis.start |> Exredis.stop) == :ok
+    assert (E.start |> E.stop) == :ok
   end
 
   test "set returns OK", ctx do
-    assert (ctx[:c] |> Exredis.query ["SET", "foo", "bar"]) == "OK"
+    assert (ctx[:c] |> E.query ["SET", "foo", "bar"]) == "OK"
   end
 
   test "set works", ctx do
-    ctx[:c] |> Exredis.query ["SET", "foo", "bar"]
+    ctx[:c] |> E.query ["SET", "foo", "bar"]
 
-    assert (ctx[:c] |> Exredis.query ["GET", "foo"]) == "bar"
+    assert (ctx[:c] |> E.query ["GET", "foo"]) == "bar"
   end
 
   test "get", ctx do
-    assert (ctx[:c] |> Exredis.query ["GET", "key"]) == "value"
+    assert (ctx[:c] |> E.query ["GET", "key"]) == "value"
   end
 
   test "mset returns OK", ctx do
     values = ["key1", "value1", "key2", "value2"]
 
-    assert (ctx[:c] |> Exredis.query ["MSET" | values]) == "OK"
+    assert (ctx[:c] |> E.query ["MSET" | values]) == "OK"
   end
 
   test "mset works", ctx do
-    ctx[:c] |> Exredis.query ["MSET" | ["key1", "value1", "key2", "value2"]]
+    ctx[:c] |> E.query ["MSET" | ["key1", "value1", "key2", "value2"]]
 
-    values = ctx[:c] |> Exredis.query ["MGET" | ["key1", "key2"]]
+    values = ctx[:c] |> E.query ["MGET" | ["key1", "key2"]]
 
     assert values == ["value1", "value2"]
   end
 
   test "transactions" do
-    client = Exredis.start
+    client = E.start
 
-    status = Exredis.query(client, ["MULTI"])
+    status = E.query(client, ["MULTI"])
     assert status == "OK"
 
-    status = Exredis.query(client, ["SET", "foo", "bar"])
+    status = E.query(client, ["SET", "foo", "bar"])
     assert status == "QUEUED"
 
-    status = Exredis.query(client, ["SET", "bar", "baz"])
+    status = E.query(client, ["SET", "bar", "baz"])
     assert status == "QUEUED"
 
-    status = Exredis.query(client, ["EXEC"])
+    status = E.query(client, ["EXEC"])
     assert status == ["OK", "OK"]
 
-    values = Exredis.query(client, ["MGET" | ["foo", "bar"]])
+    values = E.query(client, ["MGET" | ["foo", "bar"]])
     assert values == ["bar", "baz"]
   end
 
   test "pipelining" do
     query  = [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]]
-    client = Exredis.start
+    client = E.start
 
-    status = Exredis.query_pipe(client, query)
+    status = E.query_pipe(client, query)
     assert status == [ok: "OK", ok: "1", ok: "2"]
   end
 end
