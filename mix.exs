@@ -3,7 +3,7 @@ defmodule Exredis.Mixfile do
 
   def project do
     [ app: :exredis,
-      version: "0.1.0-pre.1",
+      version: "0.1.0-pre.2",
       deps: deps ]
   end
 
