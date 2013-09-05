@@ -5,6 +5,12 @@ defmodule Exredis.Api do
 
   import Exredis, only: [query: 2]
 
+  defmacro __using__(_opts) do
+    quote do
+      import Exredis.Api
+    end
+  end
+
   @type c  :: pid
   @type k  :: binary
   @type kv :: list

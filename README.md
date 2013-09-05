@@ -34,6 +34,25 @@ Pi.set
 
 Pi.get
 # => "3.14"
+
+defmodule Api do
+  use Exredis.Api
+
+  def set(client), do:
+    client |> set "key", "value"
+
+  def get(client), do:
+    client |> get "key"
+
+end
+
+client = Exredis.start
+
+client |> Api.set
+# => "OK"
+
+client |> Api.get
+# => "value"
 ```
 
 __Connect to the Redis server__

@@ -1,5 +1,16 @@
 Code.require_file "test_helper.exs", __DIR__
 
+defmodule ApiMixin do
+  use Exredis.Api
+
+  def set(client), do:
+    client |> set "key", "value"
+
+  def get(client), do:
+    client |> get "key"
+
+end
+
 defmodule ApiTest do
   use ExUnit.Case, sync: true
   alias Exredis, as: E
@@ -18,6 +29,11 @@ defmodule ApiTest do
   teardown ctx, do:
     ctx[:c] |> E.stop
 
+
+  test "mixin", c do
+    assert (c[:c] |> ApiMixin.set) == "OK"
+    assert (c[:c] |> ApiMixin.get) == "value"
+  end
 
   ##
   # Keys
