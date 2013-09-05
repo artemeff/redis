@@ -9,38 +9,36 @@ defmodule Exredis.Sub do
     end
   end
 
-  @type reconnect_sleep :: :no_reconnect | integer
-  @type max_queue_size  :: :infinity | integer
-  @type queue_behaviour :: :drop | :exit
-  @type start_link      :: { :ok, pid } | { :error, term }
+  @type reconnect  :: :no_reconnect | integer
+  @type max_queue  :: :infinity | integer
+  @type behaviour  :: :drop | :exit
+  @type start_link :: { :ok, pid } | { :error, term }
 
   @doc """
-  Connect to the Redis server for subscribe to the channel
+  Connect to the Redis server for subscribe to a channel
 
   * `start_link`
   * `start_link('127.0.0.1', 6379)`
   * `start_link('127.0.0.1', 6379, 'with_password')`
   """
-  @spec start_link(list, integer, list, reconnect_sleep, max_queue_size, queue_behaviour) :: start_link
+  @spec start_link(list, integer, list, reconnect, max_queue, behaviour) :: start_link
   def start_link(host // '127.0.0.1', port // 6379, password // '',
-            reconnect_sleep // :no_reconnect, max_queue_size // :infinity,
-            queue_behaviour // :drop), do:
-
-    :eredis_sub.start_link(host, port, password, reconnect_sleep, max_queue_size, queue_behaviour)
+            reconnect // :no_reconnect, max_queue // :infinity,
+            behaviour // :drop), do:
+    :eredis_sub.start_link(host, port, password, reconnect, max_queue, behaviour)
 
   @doc """
-  Connect to the Redis server for subscribe to the channel
+  Connect to the Redis server for subscribe to a channel
 
   * `start`
   * `start('127.0.0.1', 6379)`
   * `start('127.0.0.1', 6379, 'with_password')`
   """
-  @spec start(list, integer, list, reconnect_sleep, max_queue_size, queue_behaviour) :: pid
+  @spec start(list, integer, list, reconnect, max_queue, behaviour) :: pid
   def start(host // '127.0.0.1', port // 6379, password // '',
-            reconnect_sleep // :no_reconnect, max_queue_size // :infinity,
-            queue_behaviour // :drop), do:
-
-    :eredis_sub.start_link(host, port, password, reconnect_sleep, max_queue_size, queue_behaviour)
+            reconnect // :no_reconnect, max_queue // :infinity,
+            behaviour // :drop), do:
+    :eredis_sub.start_link(host, port, password, reconnect, max_queue, behaviour)
     |> elem 1
 
   @doc """
@@ -51,7 +49,8 @@ defmodule Exredis.Sub do
   Client is a pid getting from start command
   """
   @spec stop(pid) :: :ok
-  def stop(client), do: :eredis_sub.stop(client)
+  def stop(client), do:
+    :eredis_sub.stop(client)
 
   @doc """
   Subscribe to a channel
@@ -92,6 +91,7 @@ defmodule Exredis.Sub do
         ack_message(pid)
         callback.(msg)
         receiver(pid, callback)
+        
     end
   end
 end
