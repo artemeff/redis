@@ -34,7 +34,9 @@ Pi.set
 
 Pi.get
 # => "3.14"
+```
 
+```elixir
 defmodule Api do
   use Exredis.Api
 
