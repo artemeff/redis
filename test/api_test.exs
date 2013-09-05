@@ -48,7 +48,7 @@ defmodule ApiTest do
     c[:c] |> R.flushall
     c[:c] |> R.mset ["k1", "v1", "k2", "v2"]
 
-    assert (c[:c] |> R.keys "k*") == ["k1", "k2"]
+    assert length(c[:c] |> R.keys "k*") == 2
   end
 
   ##
