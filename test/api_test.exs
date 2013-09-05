@@ -60,6 +60,14 @@ defmodule ApiTest do
   end
 
   ##
+  # Pub/Sub
+  ##
+
+  test "publish", c do
+    assert (c[:c] |> R.publish "ch", "msg") == "0"
+  end
+
+  ##
   # Server
   ##
 

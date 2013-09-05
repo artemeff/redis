@@ -77,14 +77,4 @@ defmodule Exredis do
   def query_pipe(client, command) when is_pid(client) and is_list(command), do:
     client |> :eredis.qp command
 
-  @doc """
-  Publish to the channel, client should be started from
-  regular exredis method: `Exredis.start`
-
-  * `publish(client, "some_channel", "Hello World!")`
-  """
-  @spec publish(pid, binary, binary) :: any
-  def publish(client, channel, message), do:
-    client |> query ["PUBLISH", channel, message]
-
 end

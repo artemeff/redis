@@ -4,6 +4,7 @@ defmodule PubsubTest do
   use ExUnit.Case
   alias Exredis, as: E
   alias Exredis.Sub, as: S
+  alias Exredis.Api, as: R
 
   test "pub/sub" do
     client_sub = S.start
@@ -21,7 +22,7 @@ defmodule PubsubTest do
 
     end
 
-    client |> E.publish "foo", "Hello World!"
+    client |> R.publish "foo", "Hello World!"
 
     receive do
       msg ->
@@ -48,7 +49,7 @@ defmodule PubsubTest do
 
     end
 
-    client |> E.publish "bar_test", "Hello World!"
+    client |> R.publish "bar_test", "Hello World!"
 
     receive do
       msg ->
