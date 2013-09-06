@@ -31,9 +31,9 @@ defmodule Exredis.Api do
   def del(c, k), do:
     c |> query(["DEL", k]) |> int_reply
 
-  @spec keys(c, k) :: v
-  def keys(c, k), do:
-    c |> query(["KEYS", k])
+  @spec keys(c, kl) :: blk_reply
+  def keys(c, kl), do:
+    c |> query(["KEYS", kl])
 
   @spec pexpire(c, k, v) :: int_reply
   def pexpire(c, k, v), do:
