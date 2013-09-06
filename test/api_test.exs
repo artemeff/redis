@@ -82,6 +82,14 @@ defmodule ApiTest do
     assert (c[:c] |> R.exists "non-existing-key") == 0
   end
 
+  test "move", _c do
+    # TODO
+  end
+
+  test "pttl", c do
+    assert (c[:c] |> R.pttl "key") == -1
+  end
+
   end
 
   ##

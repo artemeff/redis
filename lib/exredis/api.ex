@@ -61,6 +61,13 @@ defmodule Exredis.Api do
   def exists(c, k), do:
     c |> query(["EXISTS", k]) |> int_reply
 
+  # TODO
+  # def move do: :undefined
+
+  @spec pttl(c, k) :: int_reply
+  def pttl(c, k), do:
+    c |> query(["PTTL", k]) |> int_reply
+
   ##
   # Strings
   ##
