@@ -31,7 +31,7 @@ defmodule ApiTest do
 
 
   test "mixin", c do
-    assert (c[:c] |> ApiMixin.set) == "OK"
+    assert (c[:c] |> ApiMixin.set) == :ok
     assert (c[:c] |> ApiMixin.get) == "value"
   end
 
@@ -64,7 +64,7 @@ defmodule ApiTest do
   end
 
   test "set", c do
-    assert (c[:c] |> R.set "key-2", "value-2") == "OK"
+    assert (c[:c] |> R.set "key-2", "value-2") == :ok
     assert (c[:c] |> R.get "key-2") == "value-2"
   end
 

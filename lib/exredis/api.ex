@@ -47,9 +47,9 @@ defmodule Exredis.Api do
   def get(c, k), do:
     c |> query(["GET", k])
 
-  @spec set(c, k, v) :: binary
+  @spec set(c, k, v) :: sts_reply
   def set(c, k, v), do:
-    c |> query(["SET", k, v])
+    c |> query(["SET", k, v]) |> sts_reply
 
   @spec mset(c, kv) :: v
   def mset(c, kv), do:
@@ -79,8 +79,13 @@ defmodule Exredis.Api do
   # Reply parsers
   ##
 
-  @spec int_reply(binary) :: int_reply
   defp int_reply(reply), do:
     reply |> binary_to_integer
+
+  defp sts_reply("OK"), do:
+    :ok
+
+  defp sts_reply(reply), do:
+    reply
 
 end
