@@ -55,7 +55,7 @@ defmodule Exredis.Api do
   def mset(c, kv), do:
     c |> query(["MSET" | kv]) |> sts_reply
 
-  @spec mget(c, kv) :: v
+  @spec mget(c, kv) :: blk_reply
   def mget(c, kv), do:
     c |> query(["MGET" | kv])
 
