@@ -16,6 +16,8 @@ defmodule Exredis.Api do
   @type kv :: list
   @type v  :: binary | list | :undefined
 
+  @type int_reply :: integer
+
   ##
   # Keys
   ##
@@ -27,6 +29,10 @@ defmodule Exredis.Api do
   @spec keys(c, k) :: v
   def keys(c, k), do:
     c |> query ["KEYS", k]
+
+  @spec pexpire(c, k, v) :: int_reply
+  def pexpire(c, k, v), do:
+    c |> query(["PEXPIRE", k, v]) |> int_reply
 
   ##
   # Strings
@@ -63,5 +69,13 @@ defmodule Exredis.Api do
   @spec flushall(c) :: v
   def flushall(c), do:
     c |> query ["FLUSHALL"]
+
+  ##
+  # Reply parsers
+  ##
+
+  @spec int_reply(binary) :: int_reply
+  defp int_reply(reply), do:
+    reply |> binary_to_integer
 
 end

@@ -51,6 +51,10 @@ defmodule ApiTest do
     assert length(c[:c] |> R.keys "k*") == 2
   end
 
+  test "pexpire", c do
+    assert (c[:c] |> R.pexpire "key", "1500") == 1
+  end
+
   ##
   # Strigns
   ##
