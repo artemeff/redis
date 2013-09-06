@@ -69,13 +69,13 @@ defmodule ApiTest do
   end
 
   test "mset", c do
-    assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == "OK"
+    assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == :ok
     assert (c[:c] |> R.get "k1") == "v1"
     assert (c[:c] |> R.get "k2") == "v2"
   end
 
   test "mget", c do
-    assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == "OK"
+    assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == :ok
     assert (c[:c] |> R.mget ["k1", "k2"]) == ["v1", "v2"]
   end
 

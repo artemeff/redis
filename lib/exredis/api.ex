@@ -51,9 +51,9 @@ defmodule Exredis.Api do
   def set(c, k, v), do:
     c |> query(["SET", k, v]) |> sts_reply
 
-  @spec mset(c, kv) :: v
+  @spec mset(c, kv) :: sts_reply
   def mset(c, kv), do:
-    c |> query(["MSET" | kv])
+    c |> query(["MSET" | kv]) |> sts_reply
 
   @spec mget(c, kv) :: v
   def mget(c, kv), do:
