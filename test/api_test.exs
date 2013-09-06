@@ -123,6 +123,8 @@ defmodule ApiTest do
     assert (c[:c] |> R.rename "key", "new_key") == :ok
   end
 
+  test "type", c do
+    assert (c[:c] |> R.type "key") == "string"
   end
 
   ##

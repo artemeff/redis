@@ -98,6 +98,10 @@ defmodule Exredis.Api do
   def rename(c, k, nk), do:
     c |> query(["RENAME", k, nk]) |> sts_reply
 
+  @spec type(c, k) :: str_reply
+  def type(c, k), do:
+    c |> query(["TYPE", k])
+
   ##
   # Strings
   ##
