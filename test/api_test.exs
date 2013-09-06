@@ -64,6 +64,15 @@ defmodule ApiTest do
     assert is_binary(c[:c] |> R.dump "key") == true
   end
 
+  test "migrate", c do
+    # TODO
+  end
+
+  test "pexpireat", c do
+    assert (c[:c] |> R.pexpireat "key", "1500") == 1
+    assert (c[:c] |> R.pexpireat "non-existing-key", "1500") == 0
+  end
+
   end
 
   ##

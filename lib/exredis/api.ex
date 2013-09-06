@@ -47,6 +47,13 @@ defmodule Exredis.Api do
   def dump(c, k), do:
     c |> query(["DUMP", k])
 
+  # TODO
+  def migrate do: :undefined
+
+  @spec pexpireat(c, k, v) :: int_reply
+  def pexpireat(c, k, v), do:
+    c |> query(["PEXPIREAT", k, v]) |> int_reply
+
   ##
   # Strings
   ##
