@@ -48,11 +48,18 @@ defmodule Exredis.Api do
     c |> query(["DUMP", k])
 
   # TODO
-  def migrate do: :undefined
+  # def migrate do: :undefined
 
   @spec pexpireat(c, k, v) :: int_reply
   def pexpireat(c, k, v), do:
     c |> query(["PEXPIREAT", k, v]) |> int_reply
+
+  # TODO
+  # def restore do: :undefined
+
+  @spec exists(c, k) :: int_reply
+  def exists(c, k), do:
+    c |> query(["EXISTS", k]) |> int_reply
 
   ##
   # Strings
