@@ -111,6 +111,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.ttl "key") == -1
   end
 
+  test "expireat", c do
+    assert (c[:c] |> R.expireat "key", "1293840000") == 1
+  end
+
   end
 
   ##

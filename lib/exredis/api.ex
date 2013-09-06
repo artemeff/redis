@@ -86,6 +86,10 @@ defmodule Exredis.Api do
   def ttl(c, k), do:
     c |> query(["TTL", k]) |> int_reply
 
+  @spec expireat(c, k, v) :: int_reply
+  def expireat(c, k, v), do:
+    c |> query(["EXPIREAT", k, v]) |> int_reply
+
   ##
   # Strings
   ##
