@@ -119,6 +119,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.persist "key") == 0
   end
 
+  test "rename", c do
+    assert (c[:c] |> R.rename "key", "new_key") == :ok
+  end
+
   end
 
   ##

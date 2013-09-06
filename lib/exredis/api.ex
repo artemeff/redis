@@ -94,6 +94,10 @@ defmodule Exredis.Api do
   def persist(c, k), do:
     c |> query(["PERSIST", k]) |> int_reply
 
+  @spec rename(c, k, k) :: sts_reply
+  def rename(c, k, nk), do:
+    c |> query(["RENAME", k, nk]) |> sts_reply
+
   ##
   # Strings
   ##
