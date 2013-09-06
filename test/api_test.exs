@@ -40,8 +40,8 @@ defmodule ApiTest do
   ##
 
   test "del", c do
-    assert (c[:c] |> R.del "key") == "1"
-    assert (c[:c] |> R.get "key") == :undefined
+    assert (c[:c] |> R.del "key") == 1
+    assert (c[:c] |> R.del ["key1", "key2"]) == 0
   end
 
   test "keys", c do

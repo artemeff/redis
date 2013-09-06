@@ -22,9 +22,9 @@ defmodule Exredis.Api do
   # Keys
   ##
 
-  @spec del(c, k) :: v
+  @spec del(c, k) :: int_reply
   def del(c, k), do:
-    c |> query(["DEL", k])
+    c |> query(["DEL", k]) |> int_reply
 
   @spec keys(c, k) :: v
   def keys(c, k), do:
