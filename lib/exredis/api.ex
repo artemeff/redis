@@ -13,6 +13,7 @@ defmodule Exredis.Api do
 
   @type c  :: pid
   @type k  :: binary
+  @type kl :: k | list
   @type kv :: list
   @type v  :: binary | list | :undefined
 
