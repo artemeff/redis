@@ -20,7 +20,7 @@ defmodule Exredis.Api do
   @type sts_reply :: :ok
   @type int_reply :: integer
   @type blk_reply :: list
-  @type str_reply :: binary
+  @type str_reply :: binary | :undefined
   @type err_reply :: binary
 
   ##
