@@ -56,6 +56,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.pexpire "non-existing-key", "1500") == 0
   end
 
+  test "renamenx", c do
+    assert (c[:c] |> R.renamenx "key", "new_key") == 1
+  end
+
   end
 
   ##

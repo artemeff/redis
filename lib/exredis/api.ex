@@ -39,6 +39,10 @@ defmodule Exredis.Api do
   def pexpire(c, k, v), do:
     c |> query(["PEXPIRE", k, v]) |> int_reply
 
+  @spec renamenx(c, k, k) :: int_reply
+  def renamenx(c, k, nk), do:
+    c |> query(["RENAMENX", k, nk]) |> int_reply
+
   ##
   # Strings
   ##
