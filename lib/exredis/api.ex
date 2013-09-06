@@ -16,7 +16,10 @@ defmodule Exredis.Api do
   @type kv :: list
   @type v  :: binary | list | :undefined
 
+  @type sts_reply :: :ok
   @type int_reply :: integer
+  @type str_reply :: binary
+  @type err_reply :: binary
 
   ##
   # Keys
