@@ -43,7 +43,7 @@ defmodule Exredis.Api do
   # Strings
   ##
 
-  @spec get(c, k) :: v
+  @spec get(c, k) :: str_reply
   def get(c, k), do:
     c |> query(["GET", k])
 
