@@ -53,6 +53,9 @@ defmodule ApiTest do
 
   test "pexpire", c do
     assert (c[:c] |> R.pexpire "key", "1500") == 1
+    assert (c[:c] |> R.pexpire "non-existing-key", "1500") == 0
+  end
+
   end
 
   ##
