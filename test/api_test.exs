@@ -90,6 +90,15 @@ defmodule ApiTest do
     assert (c[:c] |> R.pttl "key") == -1
   end
 
+  test "sort", _c do
+    # TODO
+  end
+
+  test "expire", c do
+    assert (c[:c] |> R.expire "key", "1500") == 1
+    assert (c[:c] |> R.expire "non-existing-key", "1500") == 0
+  end
+
   end
 
   ##

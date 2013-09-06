@@ -68,6 +68,13 @@ defmodule Exredis.Api do
   def pttl(c, k), do:
     c |> query(["PTTL", k]) |> int_reply
 
+  # TODO
+  # def sort do: :undefined
+
+  @spec expire(c, k, v) :: int_reply
+  def expire(c, k, v), do:
+    c |> query(["EXPIRE", k, v]) |> int_reply
+
   ##
   # Strings
   ##
