@@ -53,8 +53,8 @@ defmodule Exredis.Api do
   ##
 
   @spec publish(c, k, v) :: any
-  def publish(client, channel, message), do:
-    client |> query ["PUBLISH", channel, message]
+  def publish(c, ch, msg), do:
+    c |> query ["PUBLISH", ch, msg]
 
   ##
   # Server
