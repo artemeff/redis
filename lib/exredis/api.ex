@@ -82,6 +82,10 @@ defmodule Exredis.Api do
   def randomkey(c), do:
     c |> query(["RANDOMKEY"])
 
+  @spec ttl(c, k) :: int_reply
+  def ttl(c, k), do:
+    c |> query(["TTL", k]) |> int_reply
+
   ##
   # Strings
   ##

@@ -107,6 +107,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.randomkey) == "key"
   end
 
+  test "ttl", c do
+    assert (c[:c] |> R.ttl "key") == -1
+  end
+
   end
 
   ##
