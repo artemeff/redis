@@ -4,7 +4,7 @@ defmodule Exredis.Mixfile do
   def project do
     [ app: :exredis,
       version: "0.1.0-pre.2",
-      deps: deps ]
+      deps: deps(Mix.env) ]
   end
 
   # Configuration for the OTP application
@@ -13,9 +13,11 @@ defmodule Exredis.Mixfile do
   end
 
   # Dependencies
-  defp deps do
-    [
-      { :eredis, "1.0.6", [ github: "wooga/eredis", tag: "v1.0.6" ] }
-    ]
-  end
+  defp deps(:prod), do:
+    [{ :eredis, "1.0.6", [ github: "wooga/eredis", tag: "v1.0.6" ] }]
+
+  defp deps(_), do:
+    deps(:prod) ++
+      [{ :benchmark, github: "meh/elixir-benchmark" }]
+
 end
