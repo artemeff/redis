@@ -115,6 +115,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.expireat "key", "1293840000") == 1
   end
 
+  test "persist", c do
+    assert (c[:c] |> R.persist "key") == 0
+  end
+
   end
 
   ##

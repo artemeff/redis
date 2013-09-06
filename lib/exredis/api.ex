@@ -90,6 +90,10 @@ defmodule Exredis.Api do
   def expireat(c, k, v), do:
     c |> query(["EXPIREAT", k, v]) |> int_reply
 
+  @spec persist(c, k) :: int_reply
+  def persist(c, k), do:
+    c |> query(["PERSIST", k]) |> int_reply
+
   ##
   # Strings
   ##
