@@ -99,6 +99,14 @@ defmodule ApiTest do
     assert (c[:c] |> R.expire "non-existing-key", "1500") == 0
   end
 
+  test "object", _c do
+    # TODO
+  end
+
+  test "randomkey", c do
+    assert (c[:c] |> R.randomkey) == "key"
+  end
+
   end
 
   ##

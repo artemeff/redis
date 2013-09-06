@@ -75,6 +75,13 @@ defmodule Exredis.Api do
   def expire(c, k, v), do:
     c |> query(["EXPIRE", k, v]) |> int_reply
 
+  # TODO
+  # def object do: :undefined
+
+  @spec randomkey(c) :: blk_reply
+  def randomkey(c), do:
+    c |> query(["RANDOMKEY"])
+
   ##
   # Strings
   ##
