@@ -84,7 +84,7 @@ defmodule ApiTest do
   ##
 
   test "publish", c do
-    assert (c[:c] |> R.publish "ch", "msg") == "0"
+    assert (c[:c] |> R.publish "ch", "msg") == 0
   end
 
   ##
@@ -92,7 +92,7 @@ defmodule ApiTest do
   ##
 
   test "flushall", c do
-    assert (c[:c] |> R.flushall) == "OK"
+    assert (c[:c] |> R.flushall) == :ok
     assert (c[:c] |> R.get "key") == :undefined
   end
 

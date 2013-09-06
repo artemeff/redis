@@ -63,17 +63,17 @@ defmodule Exredis.Api do
   # Pub/Sub
   ##
 
-  @spec publish(c, k, v) :: any
+  @spec publish(c, k, v) :: int_reply
   def publish(c, ch, msg), do:
-    c |> query(["PUBLISH", ch, msg])
+    c |> query(["PUBLISH", ch, msg]) |> int_reply
 
   ##
   # Server
   ##
 
-  @spec flushall(c) :: v
+  @spec flushall(c) :: sts_reply
   def flushall(c), do:
-    c |> query(["FLUSHALL"])
+    c |> query(["FLUSHALL"]) |> sts_reply
 
   ##
   # Reply parsers
