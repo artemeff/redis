@@ -60,6 +60,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.renamenx "key", "new_key") == 1
   end
 
+  test "dump", c do
+    assert is_binary(c[:c] |> R.dump "key") == true
+  end
+
   end
 
   ##

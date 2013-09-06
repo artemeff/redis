@@ -43,6 +43,10 @@ defmodule Exredis.Api do
   def renamenx(c, k, nk), do:
     c |> query(["RENAMENX", k, nk]) |> int_reply
 
+  @spec dump(c, k) :: blk_reply
+  def dump(c, k), do:
+    c |> query(["DUMP", k])
+
   ##
   # Strings
   ##
