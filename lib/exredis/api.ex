@@ -24,11 +24,11 @@ defmodule Exredis.Api do
 
   @spec del(c, k) :: v
   def del(c, k), do:
-    c |> query ["DEL", k]
+    c |> query(["DEL", k])
 
   @spec keys(c, k) :: v
   def keys(c, k), do:
-    c |> query ["KEYS", k]
+    c |> query(["KEYS", k])
 
   @spec pexpire(c, k, v) :: int_reply
   def pexpire(c, k, v), do:
@@ -40,19 +40,19 @@ defmodule Exredis.Api do
 
   @spec get(c, k) :: v
   def get(c, k), do:
-    c |> query ["GET", k]
+    c |> query(["GET", k])
 
   @spec set(c, k, v) :: binary
   def set(c, k, v), do:
-    c |> query ["SET", k, v]
+    c |> query(["SET", k, v])
 
   @spec mset(c, kv) :: v
   def mset(c, kv), do:
-    c |> query ["MSET" | kv]
+    c |> query(["MSET" | kv])
 
   @spec mget(c, kv) :: v
   def mget(c, kv), do:
-    c |> query ["MGET" | kv]
+    c |> query(["MGET" | kv])
 
   ##
   # Pub/Sub
@@ -60,7 +60,7 @@ defmodule Exredis.Api do
 
   @spec publish(c, k, v) :: any
   def publish(c, ch, msg), do:
-    c |> query ["PUBLISH", ch, msg]
+    c |> query(["PUBLISH", ch, msg])
 
   ##
   # Server
@@ -68,7 +68,7 @@ defmodule Exredis.Api do
 
   @spec flushall(c) :: v
   def flushall(c), do:
-    c |> query ["FLUSHALL"]
+    c |> query(["FLUSHALL"])
 
   ##
   # Reply parsers
