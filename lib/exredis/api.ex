@@ -31,72 +31,64 @@ defmodule Exredis.Api do
   def del(c, k), do:
     c |> query(["DEL", k]) |> int_reply
 
-  @spec keys(c, kl) :: blk_reply
-  def keys(c, kl), do:
-    c |> query(["KEYS", kl])
-
-  @spec pexpire(c, k, v) :: int_reply
-  def pexpire(c, k, v), do:
-    c |> query(["PEXPIRE", k, v]) |> int_reply
-
-  @spec renamenx(c, k, k) :: int_reply
-  def renamenx(c, k, nk), do:
-    c |> query(["RENAMENX", k, nk]) |> int_reply
-
   @spec dump(c, k) :: blk_reply
   def dump(c, k), do:
     c |> query(["DUMP", k])
-
-  # TODO
-  # def migrate do: :undefined
-
-  @spec pexpireat(c, k, v) :: int_reply
-  def pexpireat(c, k, v), do:
-    c |> query(["PEXPIREAT", k, v]) |> int_reply
-
-  # TODO
-  # def restore do: :undefined
 
   @spec exists(c, k) :: int_reply
   def exists(c, k), do:
     c |> query(["EXISTS", k]) |> int_reply
 
-  # TODO
-  # def move do: :undefined
-
-  @spec pttl(c, k) :: int_reply
-  def pttl(c, k), do:
-    c |> query(["PTTL", k]) |> int_reply
-
-  # TODO
-  # def sort do: :undefined
-
   @spec expire(c, k, v) :: int_reply
   def expire(c, k, v), do:
     c |> query(["EXPIRE", k, v]) |> int_reply
-
-  # TODO
-  # def object do: :undefined
-
-  @spec randomkey(c) :: blk_reply
-  def randomkey(c), do:
-    c |> query(["RANDOMKEY"])
-
-  @spec ttl(c, k) :: int_reply
-  def ttl(c, k), do:
-    c |> query(["TTL", k]) |> int_reply
 
   @spec expireat(c, k, v) :: int_reply
   def expireat(c, k, v), do:
     c |> query(["EXPIREAT", k, v]) |> int_reply
 
+  @spec keys(c, kl) :: blk_reply
+  def keys(c, kl), do:
+    c |> query(["KEYS", kl])
+
+  # migrate
+  # move
+  # object
+
   @spec persist(c, k) :: int_reply
   def persist(c, k), do:
     c |> query(["PERSIST", k]) |> int_reply
 
+  @spec pexpire(c, k, v) :: int_reply
+  def pexpire(c, k, v), do:
+    c |> query(["PEXPIRE", k, v]) |> int_reply
+
+  @spec pexpireat(c, k, v) :: int_reply
+  def pexpireat(c, k, v), do:
+    c |> query(["PEXPIREAT", k, v]) |> int_reply
+
+  @spec pttl(c, k) :: int_reply
+  def pttl(c, k), do:
+    c |> query(["PTTL", k]) |> int_reply
+
+  @spec randomkey(c) :: blk_reply
+  def randomkey(c), do:
+    c |> query(["RANDOMKEY"])
+
   @spec rename(c, k, k) :: sts_reply
   def rename(c, k, nk), do:
     c |> query(["RENAME", k, nk]) |> sts_reply
+
+  @spec renamenx(c, k, k) :: int_reply
+  def renamenx(c, k, nk), do:
+    c |> query(["RENAMENX", k, nk]) |> int_reply
+
+  # restore
+  # sort
+
+  @spec ttl(c, k) :: int_reply
+  def ttl(c, k), do:
+    c |> query(["TTL", k]) |> int_reply
 
   @spec type(c, k) :: str_reply
   def type(c, k), do:
