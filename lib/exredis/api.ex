@@ -110,7 +110,14 @@ defmodule Exredis.Api do
   def append(c, k, v), do:
     c |> query(["APPEND", k, v]) |> int_reply
 
-  # bitcount
+  @spec bitcount(c, k) :: int_reply
+  def bitcount(c, k), do:
+    c |> query(["BITCOUNT", k]) |> int_reply
+
+  @spec bitcount(c, k, v, v) :: int_reply
+  def bitcount(c, k, v, v), do:
+    c |> query(["BITCOUNT", k, v, v]) |> int_reply
+
   # bitop
   # decr
   # decrby
