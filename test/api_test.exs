@@ -144,6 +144,11 @@ defmodule ApiTest do
     assert (c[:c] |> R.bitcount "mykey", 1, 1) == 6
   end
 
+  test "decr", c do
+    assert (c[:c] |> R.set "mykey", 10) == :ok
+    assert (c[:c] |> R.decr "mykey") == 9
+  end
+
   test "get", c do
     assert (c[:c] |> R.get "key") == "value"
   end

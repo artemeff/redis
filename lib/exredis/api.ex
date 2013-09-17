@@ -119,7 +119,11 @@ defmodule Exredis.Api do
     c |> query(["BITCOUNT", k, v, v]) |> int_reply
 
   # bitop
-  # decr
+  
+  @spec decr(c, k) :: int_reply
+  def decr(c, k), do:
+    c |> query(["DECR", k]) |> int_reply
+
   # decrby
 
   @spec get(c, k) :: str_reply
