@@ -124,7 +124,9 @@ defmodule Exredis.Api do
   def decr(c, k), do:
     c |> query(["DECR", k]) |> int_reply
 
-  # decrby
+  @spec decrby(c, k, v) :: int_reply
+  def decrby(c, k, v), do:
+    c |> query(["DECRBY", k, v]) |> int_reply
 
   @spec get(c, k) :: str_reply
   def get(c, k), do:

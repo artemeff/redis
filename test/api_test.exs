@@ -149,6 +149,11 @@ defmodule ApiTest do
     assert (c[:c] |> R.decr "mykey") == 9
   end
 
+  test "decrby", c do
+    assert (c[:c] |> R.set "mykey", 10) == :ok
+    assert (c[:c] |> R.decrby "mykey", 5) == 5
+  end
+
   test "get", c do
     assert (c[:c] |> R.get "key") == "value"
   end
