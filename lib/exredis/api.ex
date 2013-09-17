@@ -161,20 +161,163 @@ defmodule Exredis.Api do
   # strlen
 
   ##
+  # Hashes
+  ##
+
+  # hdel
+  # hexists
+  # hget
+  # hgetall
+  # hincrby
+  # hincrbyfloat
+  # hkeys
+  # hlen
+  # hmget
+  # hmset
+  # hset
+  # hsetnx
+  # hvals
+
+  ##
+  # Lists
+  ##
+
+  # blpop
+  # btpop
+  # brpoplpush
+  # lindex
+  # linsert
+  # llen
+  # lpop
+  # lpush
+  # lpushx
+  # lrange
+  # lrem
+  # lset
+  # ltrim
+  # rpop
+  # rpoplpush
+  # rpush
+  # rpushx
+
+  ##
+  # Sets
+  ##
+
+  # sadd
+  # scard
+  # sdiff
+  # sdiffstore
+  # sinter
+  # sinterstore
+  # sismember
+  # smembers
+  # smove
+  # spop
+  # srandmember
+  # srem
+  # sunion
+  # sunionstore
+
+  ##
+  # Sorted sets
+  ##
+
+  # zadd
+  # zcard
+  # zcount
+  # zincrby
+  # zinterstore
+  # zrange
+  # zrangebyscore
+  # zrank
+  # zrem
+  # zremrangebyrank
+  # zremrangebyscore
+  # zrevrange
+  # zrevrangebyscore
+  # zrevrank
+  # zscore
+  # zunionstore
+
+  ##
   # Pub/Sub
   ##
+
+  # psubscribe
+  # pubsub
 
   @spec publish(c, k, v) :: int_reply
   def publish(c, ch, msg), do:
     c |> query(["PUBLISH", ch, msg]) |> int_reply
 
+  # punsubscribe
+  # subscribe
+  # unsubscribe
+
+  ##
+  # Transactions
+  ##
+
+  # discard
+  # exec
+  # multi
+  # unwatch
+  # watch
+
+  ##
+  # Scripting
+  ##
+
+  # eval
+  # evalsha
+  # script exists
+  # script flush
+  # script kill
+  # script load
+
+  ##
+  # Connection
+  ##
+
+  # auth
+  # echo
+  # ping
+  # quit
+  # select
+
   ##
   # Server
   ##
 
+  # bgrewriteaof
+  # bgsave
+  # client kill
+  # client list
+  # client getname
+  # client setname
+  # config get
+  # config rewrite
+  # config set
+  # config resetstat
+  # dbsize
+  # debug object
+  # debug segfault
+
   @spec flushall(c) :: sts_reply
   def flushall(c), do:
     c |> query(["FLUSHALL"]) |> sts_reply
+
+  # flushdb
+  # info
+  # lastsave
+  # monitor
+  # save
+  # shutdown
+  # slaveof
+  # slowlog
+  # sync
+  # time
 
   ##
   # Reply parsers
