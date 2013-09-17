@@ -106,21 +106,46 @@ defmodule Exredis.Api do
   # Strings
   ##
 
+  @spec append(c, k, v) :: int_reply
+  def append(c, k, v), do:
+    c |> query(["APPEND", k, v]) |> int_reply
+
+  # bitcount
+  # bitop
+  # decr
+  # decrby
+
   @spec get(c, k) :: str_reply
   def get(c, k), do:
     c |> query(["GET", k])
+
+  # getbit
+  # getrange
+  # getset
+  # incr
+  # incrby
+  # incrbyfloat
+
+  @spec mget(c, kv) :: blk_reply
+  def mget(c, kv), do:
+    c |> query(["MGET" | kv])
+    
+  @spec mset(c, kv) :: sts_reply
+  def mset(c, kv), do:
+    c |> query(["MSET" | kv]) |> sts_reply
+
+  # msetnx
+  # psetex
 
   @spec set(c, k, v) :: sts_reply
   def set(c, k, v), do:
     c |> query(["SET", k, v]) |> sts_reply
 
-  @spec mset(c, kv) :: sts_reply
-  def mset(c, kv), do:
-    c |> query(["MSET" | kv]) |> sts_reply
-
-  @spec mget(c, kv) :: blk_reply
-  def mget(c, kv), do:
-    c |> query(["MGET" | kv])
+  # setbit
+  # setex
+  # setnx
+  # setrange
+  # strlen
 
   ##
   # Pub/Sub

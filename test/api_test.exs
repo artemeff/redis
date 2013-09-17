@@ -131,6 +131,12 @@ defmodule ApiTest do
   # Strigns
   ##
 
+  test "append", c do
+    assert (c[:c] |> R.append "mykey", "hello") == 5
+    assert (c[:c] |> R.append "mykey", " world") == 11
+    assert (c[:c] |> R.get "mykey") == "hello world"
+  end
+
   test "get", c do
     assert (c[:c] |> R.get "key") == "value"
   end
