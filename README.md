@@ -1,4 +1,4 @@
-## exredis [![Build Status](https://travis-ci.org/artemeff/exredis.png?branch=master)](https://travis-ci.org/artemeff/exredis)
+## exredis [![Build Status](https://travis-ci.org/artemeff/exredis.png?branch=master)](https://travis-ci.org/artemeff/exredis)[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/artemeff/exredis/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Redis client for Elixir
 
