@@ -158,6 +158,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "key") == "value"
   end
 
+  test "getbit", c do
+    assert (c[:c] |> R.setbit "bitkey", 7, 1) == 0
+    assert (c[:c] |> R.getbit "bitkey", 0) == 0
+    assert (c[:c] |> R.getbit "bitkey", 7) == 1
+  end
+
   test "set", c do
     assert (c[:c] |> R.set "key-2", "value-2") == :ok
     assert (c[:c] |> R.get "key-2") == "value-2"
