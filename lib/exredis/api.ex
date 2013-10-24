@@ -107,8 +107,8 @@ defmodule Exredis.Api do
     c |> query(["BITCOUNT", k]) |> int_reply
 
   @spec bitcount(c, k, v, v) :: int_reply
-  def bitcount(c, k, v, v), do:
-    c |> query(["BITCOUNT", k, v, v]) |> int_reply
+  def bitcount(c, k, start, bend), do:
+    c |> query(["BITCOUNT", k, start, bend]) |> int_reply
 
   # bitop
   
