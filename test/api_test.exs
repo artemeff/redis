@@ -184,6 +184,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "mykey") == "11"
   end
 
+  test "incrby", c do
+    assert (c[:c] |> R.set "mykey", 10) == :ok
+    assert (c[:c] |> R.incrby "mykey", 5) == 15
+    assert (c[:c] |> R.get "mykey") == "15"
+  end
+
   test "set", c do
     assert (c[:c] |> R.set "key-2", "value-2") == :ok
     assert (c[:c] |> R.get "key-2") == "value-2"

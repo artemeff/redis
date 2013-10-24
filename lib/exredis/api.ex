@@ -140,7 +140,10 @@ defmodule Exredis.Api do
   def incr(c, k), do:
     c |> query(["INCR", k]) |> int_reply
 
-  # incrby
+  @spec incrby(c, k, v) :: int_reply
+  def incrby(c, k, by), do:
+    c |> query(["INCRBY", k, by]) |> int_reply
+
   # incrbyfloat
 
   @spec mget(c, kv) :: blk_reply
