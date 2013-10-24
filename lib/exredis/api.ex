@@ -136,7 +136,10 @@ defmodule Exredis.Api do
   def getset(c, k, v), do:
     c |> query(["GETSET", k, v])
 
-  # incr
+  @spec incr(c, k) :: int_reply
+  def incr(c, k), do:
+    c |> query(["INCR", k]) |> int_reply
+
   # incrby
   # incrbyfloat
 
