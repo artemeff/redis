@@ -225,6 +225,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "mykey") == "Hello Redis"
   end
 
+  test "strlen", c do
+    assert (c[:c] |> R.set "mykey", "Hello World") == :ok
+    assert (c[:c] |> R.strlen "mykey") == 11
+    assert (c[:c] |> R.strlen "nonexisting") == 0
+  end
+
   test "mset", c do
     assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == :ok
     assert (c[:c] |> R.get "k1") == "v1"

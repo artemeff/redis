@@ -179,7 +179,9 @@ defmodule Exredis.Api do
   def setrange(c, k, at, value), do:
     c |> query(["SETRANGE", k, at, value]) |> int_reply
 
-  # strlen
+  @spec strlen(c, k) :: int_reply
+  def strlen(c, k), do:
+    c |> query(["STRLEN", k]) |> int_reply
 
   ##
   # Hashes
