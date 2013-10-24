@@ -15,7 +15,7 @@ defmodule Exredis.Api do
   @type k  :: binary
   @type kl :: k | list
   @type kv :: list
-  @type v  :: binary | list | :undefined
+  @type v  :: binary | list | integer | :undefined
 
   @type sts_reply :: :ok
   @type int_reply :: integer
@@ -146,7 +146,10 @@ defmodule Exredis.Api do
   def set(c, k, v), do:
     c |> query(["SET", k, v]) |> sts_reply
 
-  # setbit
+  @spec setbit(c, k, v, v) :: int_reply
+  def setbit(c, k, offset, value), do:
+    c |> query(["SETBIT", k, offset, value]) |> int_reply
+
   # setex
   # setnx
   # setrange
