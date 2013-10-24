@@ -190,6 +190,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "mykey") == "15"
   end
 
+  test "incrbyfloat", c do
+    assert (c[:c] |> R.set "mykey", "10.50") == :ok
+    assert (c[:c] |> R.incrbyfloat "mykey", "0.1") == "10.6"
+    assert (c[:c] |> R.get "mykey") == "10.6"
+  end
+
   test "set", c do
     assert (c[:c] |> R.set "key-2", "value-2") == :ok
     assert (c[:c] |> R.get "key-2") == "value-2"
