@@ -175,7 +175,10 @@ defmodule Exredis.Api do
   def setnx(c, k, v), do:
     c |> query(["SETNX", k, v]) |> int_reply
 
-  # setrange
+  @spec setrange(c, k, v, v) :: int_reply
+  def setrange(c, k, at, value), do:
+    c |> query(["SETRANGE", k, at, value]) |> int_reply
+
   # strlen
 
   ##
