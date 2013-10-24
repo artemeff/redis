@@ -132,7 +132,10 @@ defmodule Exredis.Api do
   def getrange(c, k, start, bend), do:
     c |> query(["GETRANGE", k, start, bend])
 
-  # getset
+  @spec getset(c, k, v) :: str_reply
+  def getset(c, k, v), do:
+    c |> query(["GETSET", k, v])
+
   # incr
   # incrby
   # incrbyfloat
