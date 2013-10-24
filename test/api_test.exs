@@ -207,6 +207,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "bitkey") == <<0>>
   end
 
+  test "setex", c do
+    assert (c[:c] |> R.setex "mykey", 10, "Hello") == :ok
+    assert (c[:c] |> R.ttl "mykey") == 10
+    assert (c[:c] |> R.get "mykey") == "Hello"
+  end
+
   test "mset", c do
     assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == :ok
     assert (c[:c] |> R.get "k1") == "v1"

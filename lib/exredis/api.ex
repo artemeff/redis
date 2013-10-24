@@ -167,7 +167,10 @@ defmodule Exredis.Api do
   def setbit(c, k, offset, value), do:
     c |> query(["SETBIT", k, offset, value]) |> int_reply
 
-  # setex
+  @spec setex(c, k, v, v) :: sts_reply
+  def setex(c, k, exp, value), do:
+    c |> query(["SETEX", k, exp, value]) |> sts_reply
+
   # setnx
   # setrange
   # strlen
