@@ -164,6 +164,14 @@ defmodule ApiTest do
     assert (c[:c] |> R.getbit "bitkey", 7) == 1
   end
 
+  test "getrange", c do
+    assert (c[:c] |> R.set "mykey", "This is a string") == :ok
+    assert (c[:c] |> R.getrange "mykey", 0, 3) == "This"
+    assert (c[:c] |> R.getrange "mykey", -3, -1) == "ing"
+    assert (c[:c] |> R.getrange "mykey", 0, -1) == "This is a string"
+    assert (c[:c] |> R.getrange "mykey", 10, 100) == "string"
+  end
+
   test "set", c do
     assert (c[:c] |> R.set "key-2", "value-2") == :ok
     assert (c[:c] |> R.get "key-2") == "value-2"

@@ -128,7 +128,10 @@ defmodule Exredis.Api do
   def getbit(c, k, offset), do:
     c |> query(["GETBIT", k, offset]) |> int_reply
 
-  # getrange
+  @spec getrange(c, k, v, v) :: str_reply
+  def getrange(c, k, start, bend), do:
+    c |> query(["GETRANGE", k, start, bend])
+
   # getset
   # incr
   # incrby
