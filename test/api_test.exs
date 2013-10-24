@@ -213,6 +213,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "mykey") == "Hello"
   end
 
+  test "setnx", c do
+    assert (c[:c] |> R.setnx "mykey", "Hello") == 1
+    assert (c[:c] |> R.setnx "mykey", "World") == 0
+    assert (c[:c] |> R.get "mykey") == "Hello"
+  end
+
   test "mset", c do
     assert (c[:c] |> R.mset ["k1", "v1", "k2", "v2"]) == :ok
     assert (c[:c] |> R.get "k1") == "v1"

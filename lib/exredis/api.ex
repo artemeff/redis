@@ -171,7 +171,10 @@ defmodule Exredis.Api do
   def setex(c, k, exp, value), do:
     c |> query(["SETEX", k, exp, value]) |> sts_reply
 
-  # setnx
+  @spec setnx(c, k, v) :: int_reply
+  def setnx(c, k, v), do:
+    c |> query(["SETNX", k, v]) |> int_reply
+
   # setrange
   # strlen
 
