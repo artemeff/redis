@@ -187,9 +187,16 @@ defmodule Exredis.Api do
   # Hashes
   ##
 
-  # hdel
+  @spec hdel(c, k, v) :: int_reply
+  def hdel(c, k, field), do:
+    c |> query(["HDEL", k, field]) |> int_reply
+
   # hexists
-  # hget
+  
+  @spec hget(c, k, v) :: blk_reply
+  def hget(c, k, field), do:
+    c |> query(["HGET", k, field])
+  
   # hgetall
   # hincrby
   # hincrbyfloat
@@ -197,7 +204,11 @@ defmodule Exredis.Api do
   # hlen
   # hmget
   # hmset
-  # hset
+  
+  @spec hset(c, k, v, v) :: int_reply
+  def hset(c, k, field, value), do:
+    c |> query(["HSET", k, field, value]) |> int_reply
+
   # hsetnx
   # hvals
 
