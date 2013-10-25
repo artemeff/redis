@@ -215,7 +215,10 @@ defmodule Exredis.Api do
   def hkeys(c, k), do:
     c |> query(["HKEYS", k])
   
-  # hlen
+  @spec hlen(c, k) :: int_reply
+  def hlen(c, k), do:
+    c |> query(["HLEN", k]) |> int_reply
+
   # hmget
   # hmset
   
