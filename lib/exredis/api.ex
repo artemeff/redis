@@ -199,7 +199,10 @@ defmodule Exredis.Api do
   def hget(c, k, field), do:
     c |> query(["HGET", k, field])
   
-  # hgetall
+  @spec hgetall(c, k) :: blk_reply
+  def hgetall(c, k), do:
+    c |> query(["HGETALL", k])
+
   # hincrby
   # hincrbyfloat
   # hkeys
