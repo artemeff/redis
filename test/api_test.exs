@@ -264,6 +264,20 @@ defmodule ApiTest do
     assert (c[:c] |> R.hgetall "myhash") == ["field1", "Hello", "field2", "World"]
   end
 
+  test "hincrby", c do
+    assert (c[:c] |> R.hset "myhash", "field", 5) == 1
+    assert (c[:c] |> R.hincrby "myhash", "field", 1) == 6
+    assert (c[:c] |> R.hincrby "myhash", "field", -1) == 5
+    assert (c[:c] |> R.hincrby "myhash", "field", -10) == -5
+  end
+
+  test "hincrbyfloat", c do
+    assert (c[:c] |> R.hset "myhash", "field", "10.50") == 1
+    assert (c[:c] |> R.hincrbyfloat "myhash", "field", "0.1") == "10.6"
+    assert (c[:c] |> R.hset "myhash", "field", "5.0e3") == 0
+    assert (c[:c] |> R.hincrbyfloat "myhash", "field", "2.0e2") == "5200"
+  end
+
   test "hget", c do
     assert (c[:c] |> R.hset "myhash", "field1", "foo") == 1
     assert (c[:c] |> R.hget "myhash", "field1") == "foo"

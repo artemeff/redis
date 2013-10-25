@@ -203,8 +203,14 @@ defmodule Exredis.Api do
   def hgetall(c, k), do:
     c |> query(["HGETALL", k])
 
-  # hincrby
-  # hincrbyfloat
+  @spec hincrby(c, k, v, v) :: int_reply
+  def hincrby(c, k, field, value), do:
+    c |> query(["HINCRBY", k, field, value]) |> int_reply
+
+  @spec hincrbyfloat(c, k, v, v) :: blk_reply
+  def hincrbyfloat(c, k, field, value), do:
+    c |> query(["HINCRBYFLOAT", k, field, value])
+
   # hkeys
   # hlen
   # hmget
