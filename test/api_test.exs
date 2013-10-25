@@ -313,6 +313,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.hget "myhash", "field1") == "Hello"
   end
 
+  test "hsetnx", c do
+    assert (c[:c] |> R.hsetnx "myhash", "field", "Hello") == 1
+    assert (c[:c] |> R.hsetnx "myhash", "field", "World") == 0
+    assert (c[:c] |> R.hget "myhash", "field") == "Hello"
+  end
+
   ##
   # Pub/Sub
   ##
