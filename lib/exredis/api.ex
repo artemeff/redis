@@ -223,7 +223,9 @@ defmodule Exredis.Api do
   def hmget(c, k, kv), do:
     c |> query(["HMGET", k | kv])
 
-  # hmset
+  @spec hmset(c, k, kv) :: sts_reply
+  def hmset(c, k, kv), do:
+    c |> query(["HMSET", k | kv]) |> sts_reply
   
   @spec hset(c, k, v, v) :: int_reply
   def hset(c, k, field, value), do:
