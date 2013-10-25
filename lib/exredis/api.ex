@@ -211,7 +211,10 @@ defmodule Exredis.Api do
   def hincrbyfloat(c, k, field, value), do:
     c |> query(["HINCRBYFLOAT", k, field, value])
 
-  # hkeys
+  @spec hkeys(c, k) :: blk_reply
+  def hkeys(c, k), do:
+    c |> query(["HKEYS", k])
+  
   # hlen
   # hmget
   # hmset
