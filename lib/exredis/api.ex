@@ -219,7 +219,10 @@ defmodule Exredis.Api do
   def hlen(c, k), do:
     c |> query(["HLEN", k]) |> int_reply
 
-  # hmget
+  @spec hmget(c, k ,kv) :: blk_reply
+  def hmget(c, k, kv), do:
+    c |> query(["HMGET", k | kv])
+
   # hmset
   
   @spec hset(c, k, v, v) :: int_reply
