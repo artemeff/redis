@@ -191,7 +191,9 @@ defmodule Exredis.Api do
   def hdel(c, k, field), do:
     c |> query(["HDEL", k, field]) |> int_reply
 
-  # hexists
+  @spec hexists(c, k, v) :: int_reply
+  def hexists(c, k, field), do:
+    c |> query(["HEXISTS", k, field]) |> int_reply
   
   @spec hget(c, k, v) :: blk_reply
   def hget(c, k, field), do:

@@ -252,6 +252,12 @@ defmodule ApiTest do
     assert (c[:c] |> R.hdel "myhash", "field2") == 0
   end
 
+  test "hexists", c do
+    assert (c[:c] |> R.hset "myhash", "field1", "foo") == 1
+    assert (c[:c] |> R.hexists "myhash", "field1") == 1
+    assert (c[:c] |> R.hexists "myhash", "field2") == 0
+  end
+
   test "hget", c do
     assert (c[:c] |> R.hset "myhash", "field1", "foo") == 1
     assert (c[:c] |> R.hget "myhash", "field1") == "foo"
