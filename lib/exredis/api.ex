@@ -235,7 +235,9 @@ defmodule Exredis.Api do
   def hsetnx(c, k, field, value), do:
     c |> query(["HSETNX", k, field, value]) |> int_reply
 
-  # hvals
+  @spec hvals(c, k) :: blk_reply
+  def hvals(c, k), do:
+    c |> query(["HVALS", k])
 
   ##
   # Lists
