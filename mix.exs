@@ -13,11 +13,7 @@ defmodule Exredis.Mixfile do
   end
 
   # Dependencies
-  defp deps(:prod), do:
-    [{ :eredis, "1.0.6", [ github: "wooga/eredis", tag: "v1.0.6" ] }]
-
   defp deps(_), do:
-    deps(:prod) ++
-      [{ :benchmark, github: "meh/elixir-benchmark" }]
+    [{ :eredis, "1.0.6", github: "wooga/eredis" }]
 
 end
