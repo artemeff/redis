@@ -1,8 +1,33 @@
+defmodule Exredis.Api.Helper do
+  defmacro __using__(module) do
+    quote do
+      import Exredis.Api.Helper
+    end
+  end
+
+  defmacro defredis(cmd, args, fun // nil) do
+    margs = Enum.map args, fn(x) -> {x, [], ExRedis.Hapi} end
+    quote do
+      def unquote(cmd)(client, unquote_splicing(margs)) do
+        method = String.upcase atom_to_binary unquote(cmd)
+        f = unquote(fun)
+        res = Exredis.query client, [method, unquote_splicing(margs)]
+        if f, do: f.(res), else: res
+      end
+
+      def unquote(cmd)(unquote_splicing(margs)) do
+        unquote(cmd)(defaultclient, unquote_splicing(margs))
+      end
+    end
+  end
+end
+
 defmodule Exredis.Api do
   @moduledoc """
   High-level API
   """
 
+  use Exredis.Api.Helper
   import Exredis, only: [query: 2]
 
   defmacro __using__(_opts) do
@@ -11,378 +36,155 @@ defmodule Exredis.Api do
     end
   end
 
-  @type c  :: pid
-  @type k  :: binary
-  @type kl :: k | list
-  @type kv :: list
-  @type v  :: binary | list | integer | :undefined
-
-  @type sts_reply :: :ok
-  @type int_reply :: integer
-  @type blk_reply :: list
-  @type str_reply :: binary | :undefined
-  @type err_reply :: binary
-
-  ##
-  # Keys
-  ##
-
-  @spec del(c, k) :: int_reply
-  def del(c, k), do:
-    c |> query(["DEL", k]) |> int_reply
-
-  @spec dump(c, k) :: blk_reply
-  def dump(c, k), do:
-    c |> query(["DUMP", k])
-
-  @spec exists(c, k) :: int_reply
-  def exists(c, k), do:
-    c |> query(["EXISTS", k]) |> int_reply
-
-  @spec expire(c, k, v) :: int_reply
-  def expire(c, k, v), do:
-    c |> query(["EXPIRE", k, v]) |> int_reply
-
-  @spec expireat(c, k, v) :: int_reply
-  def expireat(c, k, v), do:
-    c |> query(["EXPIREAT", k, v]) |> int_reply
-
-  @spec keys(c, kl) :: blk_reply
-  def keys(c, kl), do:
-    c |> query(["KEYS", kl])
-
-  # migrate
-  # move
-  # object
-
-  @spec persist(c, k) :: int_reply
-  def persist(c, k), do:
-    c |> query(["PERSIST", k]) |> int_reply
-
-  @spec pexpire(c, k, v) :: int_reply
-  def pexpire(c, k, v), do:
-    c |> query(["PEXPIRE", k, v]) |> int_reply
-
-  @spec pexpireat(c, k, v) :: int_reply
-  def pexpireat(c, k, v), do:
-    c |> query(["PEXPIREAT", k, v]) |> int_reply
-
-  @spec pttl(c, k) :: int_reply
-  def pttl(c, k), do:
-    c |> query(["PTTL", k]) |> int_reply
-
-  @spec randomkey(c) :: blk_reply
-  def randomkey(c), do:
-    c |> query(["RANDOMKEY"])
-
-  @spec rename(c, k, k) :: sts_reply
-  def rename(c, k, nk), do:
-    c |> query(["RENAME", k, nk]) |> sts_reply
-
-  @spec renamenx(c, k, k) :: int_reply
-  def renamenx(c, k, nk), do:
-    c |> query(["RENAMENX", k, nk]) |> int_reply
-
-  # restore
-  # sort
-
-  @spec ttl(c, k) :: int_reply
-  def ttl(c, k), do:
-    c |> query(["TTL", k]) |> int_reply
-
-  @spec type(c, k) :: str_reply
-  def type(c, k), do:
-    c |> query(["TYPE", k])
-
-  ##
-  # Strings
-  ##
-
-  @spec append(c, k, v) :: int_reply
-  def append(c, k, v), do:
-    c |> query(["APPEND", k, v]) |> int_reply
-
-  @spec bitcount(c, k) :: int_reply
-  def bitcount(c, k), do:
-    c |> query(["BITCOUNT", k]) |> int_reply
-
-  @spec bitcount(c, k, v, v) :: int_reply
-  def bitcount(c, k, start, bend), do:
-    c |> query(["BITCOUNT", k, start, bend]) |> int_reply
-
-  # bitop
-  
-  @spec decr(c, k) :: int_reply
-  def decr(c, k), do:
-    c |> query(["DECR", k]) |> int_reply
-
-  @spec decrby(c, k, v) :: int_reply
-  def decrby(c, k, v), do:
-    c |> query(["DECRBY", k, v]) |> int_reply
-
-  @spec get(c, k) :: str_reply
-  def get(c, k), do:
-    c |> query(["GET", k])
-
-  @spec getbit(c, k, v) :: int_reply
-  def getbit(c, k, offset), do:
-    c |> query(["GETBIT", k, offset]) |> int_reply
-
-  @spec getrange(c, k, v, v) :: str_reply
-  def getrange(c, k, start, bend), do:
-    c |> query(["GETRANGE", k, start, bend])
-
-  @spec getset(c, k, v) :: str_reply
-  def getset(c, k, v), do:
-    c |> query(["GETSET", k, v])
-
-  @spec incr(c, k) :: int_reply
-  def incr(c, k), do:
-    c |> query(["INCR", k]) |> int_reply
-
-  @spec incrby(c, k, v) :: int_reply
-  def incrby(c, k, by), do:
-    c |> query(["INCRBY", k, by]) |> int_reply
-
-  @spec incrbyfloat(c, k, v) :: str_reply
-  def incrbyfloat(c, k, by), do:
-    c |> query(["INCRBYFLOAT", k, by])
-
-  @spec mget(c, kv) :: blk_reply
-  def mget(c, kv), do:
-    c |> query(["MGET" | kv])
-    
-  @spec mset(c, kv) :: sts_reply
-  def mset(c, kv), do:
-    c |> query(["MSET" | kv]) |> sts_reply
-
-  # msetnx
-  # psetex
-
-  @spec set(c, k, v) :: sts_reply
-  def set(c, k, v), do:
-    c |> query(["SET", k, v]) |> sts_reply
-
-  @spec setbit(c, k, v, v) :: int_reply
-  def setbit(c, k, offset, value), do:
-    c |> query(["SETBIT", k, offset, value]) |> int_reply
-
-  @spec setex(c, k, v, v) :: sts_reply
-  def setex(c, k, exp, value), do:
-    c |> query(["SETEX", k, exp, value]) |> sts_reply
-
-  @spec setnx(c, k, v) :: int_reply
-  def setnx(c, k, v), do:
-    c |> query(["SETNX", k, v]) |> int_reply
-
-  @spec setrange(c, k, v, v) :: int_reply
-  def setrange(c, k, at, value), do:
-    c |> query(["SETRANGE", k, at, value]) |> int_reply
-
-  @spec strlen(c, k) :: int_reply
-  def strlen(c, k), do:
-    c |> query(["STRLEN", k]) |> int_reply
-
-  ##
-  # Hashes
-  ##
-
-  @spec hdel(c, k, v) :: int_reply
-  def hdel(c, k, field), do:
-    c |> query(["HDEL", k, field]) |> int_reply
-
-  @spec hexists(c, k, v) :: int_reply
-  def hexists(c, k, field), do:
-    c |> query(["HEXISTS", k, field]) |> int_reply
-  
-  @spec hget(c, k, v) :: blk_reply
-  def hget(c, k, field), do:
-    c |> query(["HGET", k, field])
-  
-  @spec hgetall(c, k) :: blk_reply
-  def hgetall(c, k), do:
-    c |> query(["HGETALL", k])
-
-  @spec hincrby(c, k, v, v) :: int_reply
-  def hincrby(c, k, field, value), do:
-    c |> query(["HINCRBY", k, field, value]) |> int_reply
-
-  @spec hincrbyfloat(c, k, v, v) :: blk_reply
-  def hincrbyfloat(c, k, field, value), do:
-    c |> query(["HINCRBYFLOAT", k, field, value])
-
-  @spec hkeys(c, k) :: blk_reply
-  def hkeys(c, k), do:
-    c |> query(["HKEYS", k])
-  
-  @spec hlen(c, k) :: int_reply
-  def hlen(c, k), do:
-    c |> query(["HLEN", k]) |> int_reply
-
-  @spec hmget(c, k ,kv) :: blk_reply
-  def hmget(c, k, kv), do:
-    c |> query(["HMGET", k | kv])
-
-  @spec hmset(c, k, kv) :: sts_reply
-  def hmset(c, k, kv), do:
-    c |> query(["HMSET", k | kv]) |> sts_reply
-  
-  @spec hset(c, k, v, v) :: int_reply
-  def hset(c, k, field, value), do:
-    c |> query(["HSET", k, field, value]) |> int_reply
-
-  @spec hsetnx(c, k, v, v) :: int_reply
-  def hsetnx(c, k, field, value), do:
-    c |> query(["HSETNX", k, field, value]) |> int_reply
-
-  @spec hvals(c, k) :: blk_reply
-  def hvals(c, k), do:
-    c |> query(["HVALS", k])
-
-  ##
-  # Lists
-  ##
-
-  # blpop
-  # btpop
-  # brpoplpush
-  # lindex
-  # linsert
-  # llen
-  # lpop
-  # lpush
-  # lpushx
-  # lrange
-  # lrem
-  # lset
-  # ltrim
-  # rpop
-  # rpoplpush
-  # rpush
-  # rpushx
-
-  ##
-  # Sets
-  ##
-
-  # sadd
-  # scard
-  # sdiff
-  # sdiffstore
-  # sinter
-  # sinterstore
-  # sismember
-  # smembers
-  # smove
-  # spop
-  # srandmember
-  # srem
-  # sunion
-  # sunionstore
-
-  ##
-  # Sorted sets
-  ##
-
-  # zadd
-  # zcard
-  # zcount
-  # zincrby
-  # zinterstore
-  # zrange
-  # zrangebyscore
-  # zrank
-  # zrem
-  # zremrangebyrank
-  # zremrangebyscore
-  # zrevrange
-  # zrevrangebyscore
-  # zrevrank
-  # zscore
-  # zunionstore
-
-  ##
-  # Pub/Sub
-  ##
-
-  # psubscribe
-  # pubsub
-
-  @spec publish(c, k, v) :: int_reply
-  def publish(c, ch, msg), do:
-    c |> query(["PUBLISH", ch, msg]) |> int_reply
-
-  # punsubscribe
-  # subscribe
-  # unsubscribe
-
-  ##
-  # Transactions
-  ##
-
-  # discard
-  # exec
-  # multi
-  # unwatch
-  # watch
-
-  ##
-  # Scripting
-  ##
-
-  # eval
-  # evalsha
-  # script exists
-  # script flush
-  # script kill
-  # script load
-
-  ##
-  # Connection
-  ##
-
-  # auth
-  # echo
-  # ping
-  # quit
-  # select
-
-  ##
-  # Server
-  ##
-
-  # bgrewriteaof
-  # bgsave
-  # client kill
-  # client list
-  # client getname
-  # client setname
-  # config get
-  # config rewrite
-  # config set
-  # config resetstat
-  # dbsize
-  # debug object
-  # debug segfault
-
-  @spec flushall(c) :: sts_reply
-  def flushall(c), do:
-    c |> query(["FLUSHALL"]) |> sts_reply
-
-  # flushdb
-  # info
-  # lastsave
-  # monitor
-  # save
-  # shutdown
-  # slaveof
-  # slowlog
-  # sync
-  # time
-
-  ##
-  # Reply parsers
-  ##
+  defp defaultclient do
+    pid = Process.whereis(:exredis_hapi_default_client)
+    if !pid do
+      pid = Exredis.start
+      Process.register pid, :exredis_hapi_default_client
+    end
+    pid
+  end
+
+  defredis :append, [:key, :value]
+  defredis :auth, [:password]
+  defredis :bgrewriteaof, []
+  defredis :bgsave, []
+  defredis :bitcount, [:key]#, :start, :end]
+  defredis :bitop, [:operation, :destkey, :key]#, ...]
+  defredis :blpop, [:key, :timeout]
+  defredis :brpop, [:key, :timeout]
+  defredis :brpoplpush, [:source, :destination, :timeout]
+  defredis :dbsize, []
+  defredis :discard, []
+  defredis :dump, [:key]
+  defredis :echo, [:message]
+  defredis :exec, []
+  defredis :exists, [:key]
+  defredis :expire, [:key, :seconds]
+  defredis :expireat, [:key, :timestamp]
+  defredis :flushall, []
+  defredis :flushdb, []
+  defredis :get, [:key]
+  defredis :getbit, [:key, :offset]
+  defredis :getrange, [:key, :start, :end]
+  defredis :getset, [:key, :value]
+  defredis :hdel, [:key, :field]#, ...]
+  defredis :hexists, [:key, :field]
+  defredis :hget, [:key, :field]
+  defredis :hgetall, [:key], fn x ->
+    Enum.chunk(x, 2) 
+      |> Enum.map(fn [a, b] -> {a, b} end) 
+      |> HashDict.new
+  end
+  defredis :hincrby, [:key, :field, :increment]
+  defredis :hincrbyfloat, [:key, :field, :increment]
+  defredis :hkeys, [:key]
+  defredis :hlen, [:key]
+  defredis :hmget, [:key, :field]#, ...]
+  defredis :hset, [:key, :field, :value]
+  defredis :hsetnx, [:key, :field, :value]
+  defredis :hvals, [:key]
+  defredis :incr, [:key]
+  defredis :incrby, [:key, :increment]
+  defredis :incrbyfloat, [:key, :increment]
+  # defredis :info, []
+  defredis :keys, [:pattern]
+  defredis :lastsave, []
+  defredis :lindex, [:key, :index]
+  defredis :linsert, [:key, :before_after, :pivot, :value]
+  defredis :llen, [:key]
+  defredis :lpop, [:key]
+  defredis :lpush, [:key, :value]#, ...]
+  defredis :lpushx, [:key, :value]
+  defredis :lrange, [:key, :start, :stop]
+  defredis :lrem, [:key, :count, :value]
+  defredis :lset, [:key, :index, :value]
+  defredis :ltrim, [:key, :start, :stop]
+  defredis :mget, [:key]#, ...]
+  # defredis :migrate
+  defredis :monitor, []
+  defredis :move, [:key, :db]
+  defredis :mset, [:key, :value]#, ...]
+  defredis :msetnx, [:key, :value]#, ...]
+  defredis :multi, []
+  # defredis :object, []
+  defredis :persist, [:key]
+  defredis :pexpire, [:key, :milliseconds]
+  defredis :pexpireat, [:key, :milli_timestamp]
+  defredis :ping, []
+  defredis :psetex, [:key, :milliseconds, :value]
+  defredis :psubscribe, [:pattern]#, ...]
+  # defredis :pubsub, [:subcommand]
+  defredis :pttl, [:key]
+  defredis :publish, [:channel, :message]
+  defredis :punsubscribe, [:pattern]#, ...]
+  defredis :quit, []
+  defredis :randomkey, []
+  defredis :rename, [:key, :newkey]
+  defredis :renamex, [:key, :newkey]
+  defredis :restore, [:key, :ttl, :serialized_value]
+  defredis :rpop, [:key]
+  defredis :rpoplpush, [:source, :destination]
+  defredis :rpush, [:key, :value]#, ...]
+  defredis :rpushx, [:key, :value]#, ...]
+  defredis :sadd, [:key, :member]#, ...]
+  defredis :save, []
+  defredis :scard, [:key]
+  # defredis :script exists
+  # defredis :script flushdb
+  # defredis :script kill
+  # defredis :script load
+  defredis :sdiff, [:key]#, ...]
+  defredis :sdiffstore, [:destination, :key]#, ...]
+  defredis :select, [:index]
+  defredis :set, [:key, :value]#, :seconds, :milli]
+  defredis :setbit, [:key, :offset, :value]
+  defredis :setex, [:key, :seconds, :value]
+  defredis :setnx, [:key, :value]
+  defredis :setrange, [:key, :offset, :value]
+  # defredis :shutdown, [:nosave, :save]
+  defredis :sinter, [:key]#, ...]
+  defredis :sinterstore, [:destination, :key]#, ...]
+  defredis :sismember, [:key, :member]
+  defredis :slaveof, [:host, :port]
+  defredis :slowlog, [:subcommand]#, :argument]
+  defredis :smembers, [:key]
+  defredis :smove, [:source, :destination, :member]
+  defredis :sort, [:key]#, :by_pattern]
+  defredis :spop, [:key]
+  defredis :srandmember, [:key]#, :count]
+  defredis :srem, [:key, :member]#, ...]
+  defredis :strlen, [:key]
+  defredis :subscribe, [:channel]#, ...]
+  defredis :sunion, [:key]#, ...]
+  defredis :sunionstore, [:destination, :key]#, ...]
+  defredis :sync, []
+  defredis :time, []
+  defredis :ttl, [:key]
+  defredis :type, [:key]
+  defredis :unsubscribe, [:channel]#, ...]
+  defredis :unwatch, []
+  defredis :watch, [:key]#, ...]
+  defredis :zadd, [:key, :score, :member]#, ...]
+  defredis :zcard, [:key]
+  defredis :zcount, [:key, :min, :max]
+  defredis :zincrby, [:key, :increment, :member]
+  defredis :zinterstore, [:destination, :numkeys, :key]#, ...]
+  defredis :zrange, [:key, :start, :stop]
+  defredis :zrangebyscore, [:key, :start, :stop]
+  defredis :zrank, [:key, :member]
+  defredis :zrem, [:key, :member]#, ...]
+  defredis :zremrangebyrank, [:key, :start, :stop]
+  defredis :zremrangebyscore, [:key, :min, :max]
+  defredis :zrevrange, [:key, :start, :stop]
+  defredis :zrevrangebyscore, [:key, :min, :max]
+  defredis :zrevrank, [:key, :member]
+  defredis :zscore, [:key, :member]
+  defredis :zunionstore, [:destination, :key]#, ...]
+  # defredis :scan, [:cursor]
+  # defredis :sscan, [:key, :cursor]
+  # defredis :hscan, [:key, :cursor]
+  # defredis :zscan, [:key, :cursor]
 
   defp int_reply(reply), do:
     reply |> binary_to_integer
