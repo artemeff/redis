@@ -1,12 +1,13 @@
 defmodule Exredis.Api.Helper do
-  defmacro __using__(module) do
+  defmacro __using__(_) do
     quote do
+      import Exredis, only: [query: 2]
       import Exredis.Api.Helper
     end
   end
 
   defmacro defredis(cmd, args, fun // nil) do
-    margs = Enum.map args, fn(x) -> {x, [], ExRedis.Hapi} end
+    margs = Enum.map args, fn(x) -> {x, [], ExRedis.Api.Helper} end
     quote do
       def unquote(cmd)(client, unquote_splicing(margs)) do
         method = String.upcase atom_to_binary unquote(cmd)
@@ -29,7 +30,6 @@ defmodule Exredis.Api do
   """
 
   use Exredis.Api.Helper
-  import Exredis, only: [query: 2]
 
   defmacro __using__(_opts) do
     quote do
