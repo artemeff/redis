@@ -12,7 +12,7 @@ defmodule PubsubTest do
     pid = Kernel.self
     
     client_sub |> S.subscribe "foo", fn(msg) ->
-      pid <- msg
+      send(pid, msg)
     end
 
     receive do
@@ -39,7 +39,7 @@ defmodule PubsubTest do
     pid = Kernel.self
     
     client_sub |> S.psubscribe "bar_*", fn(msg) ->
-      pid <- msg
+      send(pid, msg)
     end
 
     receive do
