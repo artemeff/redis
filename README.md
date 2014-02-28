@@ -121,7 +121,7 @@ client = Exredis.start
 pid = Kernel.self
 
 client_sub |> Exredis.Sub.subscribe "foo", fn(msg) ->
-  pid <- msg
+  send(pid, msg)
 end
 
 receive do
@@ -147,7 +147,7 @@ client = Exredis.start
 pid = Kernel.self
 
 client_sub |> Exredis.Sub.psubscribe "bar_*", fn(msg) ->
-  pid <- msg
+  send(pid, msg)
 end
 
 receive do
