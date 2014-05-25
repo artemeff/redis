@@ -342,4 +342,43 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "key") == :undefined
   end
 
+  ##
+  # Scripting
+  ##
+
+  @lua_script "return {KEYS,ARGV}"
+  @lua_script_sha "667538fc7bc1737be485fe688c8f39e7ddc79782"
+
+  test "script load", c do
+    assert (c[:c] |> R.script_load(@lua_script)) == @lua_script_sha
+  end
+
+  test "script exists", c do
+    assert (c[:c] |> R.script_load(@lua_script)) == @lua_script_sha
+    assert (c[:c] |> R.script_exists(@lua_script_sha)) == [1]
+    assert (c[:c] |> R.script_exists([@lua_script_sha, "abcd"])) == [1, 0]
+  end
+
+  test "script flush", c do
+    assert (c[:c] |> R.script_load(@lua_script)) == @lua_script_sha
+    assert (c[:c] |> R.script_flush) == :ok
+    assert (c[:c] |> R.script_exists(@lua_script_sha)) == [0]
+  end
+
+  test "script kill", c do
+    assert (c[:c] |> R.script_kill) == "NOTBUSY No scripts in execution right now."
+  end
+
+  test "eval", c do
+    assert (c[:c] |> R.eval(@lua_script, 2, [:key1, :key2], [:argv1]))
+      == [["key1", "key2"], ["argv1"]]
+  end
+
+  test "evalsha", c do
+    assert (c[:c] |> R.script_load(@lua_script)) == @lua_script_sha
+    assert (c[:c] |> R.evalsha(@lua_script_sha, 2, [:key1, :key2], [:argv1]))
+      == [["key1", "key2"], ["argv1"]]
+  end
+
+
 end
