@@ -261,7 +261,7 @@ defmodule ApiTest do
   test "hgetall", c do
     assert (c[:c] |> R.hset "myhash", "field1", "Hello") == 1
     assert (c[:c] |> R.hset "myhash", "field2", "World") == 1
-    assert (c[:c] |> R.hgetall "myhash") == HashDict.new [{"field1", "Hello"}, {"field2", "World"}]
+    assert (c[:c] |> R.hgetall "myhash") == %{"field1" => "Hello", "field2" => "World"}
   end
 
   test "hincrby", c do

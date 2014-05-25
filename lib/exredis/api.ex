@@ -79,7 +79,7 @@ defmodule Exredis.Api do
   defredis :hgetall, [:key], fn x ->
     Enum.chunk(x, 2) 
       |> Enum.map(fn [a, b] -> {a, b} end) 
-      |> HashDict.new
+      |> Enum.into(Map.new)
   end
   defredis :hincrby, [:key, :field, :increment], &int_reply/1
   defredis :hincrbyfloat, [:key, :field, :increment]
