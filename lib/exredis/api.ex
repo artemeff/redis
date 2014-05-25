@@ -8,7 +8,7 @@ defmodule Exredis.Api.Helper do
 
   defmacro defredis(cmd, args, fun \\ nil) do
     margs = Enum.map args, fn(x) -> {x, [], ExRedis.Api.Helper} end
-    cmd = List.flatten([cmd])
+    cmd = if is_list(cmd), do: cmd, else: [cmd]
     cmd_name = Enum.map(cmd, fn(x) -> atom_to_list(x) end)
       |> Enum.join("_") |> binary_to_atom
     method = Enum.map cmd, fn(x) -> atom_to_binary(x) |> String.upcase end
