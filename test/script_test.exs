@@ -54,6 +54,13 @@ defmodule ScriptTest do
       == [["key1", "key2"], ["argv1"]]
   end
 
+  test "evalsha", c do
+    assert (c[:c] |> R.script_flush) == :ok
+    assert (c[:c] |> R.script_load(@lua_script)) == @lua_script_sha
+    assert (c[:c] |> R.evalsha(@lua_script_sha, 2, [:key1, :key2], [:argv1]))
+      == [["key1", "key2"], ["argv1"]]
+  end
+
   test "defredis_script no arguments", c do
     assert (c[:c] |> LuaScriptMixin.return_one) == "1"
   end
