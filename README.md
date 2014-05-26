@@ -162,7 +162,7 @@ receive do
 end
 ```
 
-_scripting_
+__Scripting__
 ```elixir
 client |> Exredis.Api.script_load "return 1 + 1"
 # => "c301e0c5bc3538d2bad3fdbf2e281887e643ada4"
