@@ -162,6 +162,22 @@ receive do
 end
 ```
 
+_scripting_
+```elixir
+client |> Exredis.Api.script_load "return 1 + 1"
+# => "c301e0c5bc3538d2bad3fdbf2e281887e643ada4"
+client |> Exredis.Api.evalsha "c301e0c5bc3538d2bad3fdbf2e281887e643ada4", 0, ["key1"], ["argv1"]
+# => "2"
+
+defmodule MyScripts do
+  use Exredis.Script
+
+  defredis_script :lua_echo, "return ARGV[1]"
+end
+
+client |> MyScripts.lua_echo(["mykey"], ["foo"])
+# => "foo"
+```
 ---
 
 ### Contributing
