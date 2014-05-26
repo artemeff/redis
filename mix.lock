@@ -1,1 +1,1 @@
-[ "eredis": {:git, "git://github.com/wooga/eredis.git", "d0f8c7f4d3ab4cc6ebb01539b8a2d6e32004f82a", []} ]
+%{"eredis": {:git, "git://github.com/wooga/eredis.git", "471dd471060daa1d98391cb69ae006f8ba79a042", [ref: "471dd"]}}
