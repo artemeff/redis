@@ -8,17 +8,20 @@ defmodule Exredis.Api.Helper do
 
   defmacro defredis(cmd, args, fun \\ nil) do
     margs = Enum.map args, fn(x) -> {x, [], ExRedis.Api.Helper} end
+    cmd = if is_list(cmd), do: cmd, else: [cmd]
+    cmd_name = Enum.map(cmd, fn(x) -> atom_to_list(x) end)
+      |> Enum.join("_") |> binary_to_atom
+    method = Enum.map cmd, fn(x) -> atom_to_binary(x) |> String.upcase end
     quote do
-      def unquote(cmd)(client, unquote_splicing(margs)) do
-        method = String.upcase atom_to_binary unquote(cmd)
+      def unquote(cmd_name)(client, unquote_splicing(margs)) do
         f = unquote(fun)
-        query_args = List.flatten [method|[unquote_splicing(margs)]]
+        query_args = List.flatten [unquote_splicing(method)|[unquote_splicing(margs)]]
         res = Exredis.query client, query_args
         if f, do: f.(res), else: res
       end
 
-      def unquote(cmd)(unquote_splicing(margs)) do
-        unquote(cmd)(defaultclient, unquote_splicing(margs))
+      def unquote(cmd_name)(unquote_splicing(margs)) do
+        unquote(cmd_name)(defaultclient, unquote_splicing(margs))
       end
     end
   end
@@ -63,6 +66,8 @@ defmodule Exredis.Api do
   defredis :discard, []
   defredis :dump, [:key]
   defredis :echo, [:message]
+  defredis :eval, [:script, :numkeys, :keys, :args]
+  defredis :evalsha, [:scriptsha, :numkeys, :keys, :args]
   defredis :exec, []
   defredis :exists, [:key], &int_reply/1
   defredis :expire, [:key, :seconds], &int_reply/1
@@ -136,10 +141,10 @@ defmodule Exredis.Api do
   defredis :sadd, [:key, :member]#, ...]
   defredis :save, []
   defredis :scard, [:key]
-  # defredis :script exists
-  # defredis :script flushdb
-  # defredis :script kill
-  # defredis :script load
+  defredis [:script, :exists], [:shasum], &multi_int_reply/1
+  defredis [:script, :flush], [], &sts_reply/1
+  defredis [:script, :kill], []
+  defredis [:script, :load], [:script]
   defredis :sdiff, [:key]#, ...]
   defredis :sdiffstore, [:destination, :key]#, ...]
   defredis :select, [:index]
@@ -194,6 +199,9 @@ defmodule Exredis.Api do
 
   defp int_reply(reply), do:
     reply |> binary_to_integer
+
+  defp multi_int_reply(reply), do:
+    reply |> Enum.map &int_reply/1
 
   defp sts_reply("OK"), do:
     :ok
