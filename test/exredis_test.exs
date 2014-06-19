@@ -22,10 +22,6 @@ defmodule ExredisTest do
     { :ok, [c: client] }
   end
 
-  teardown ctx, do:
-    ctx[:c] |> E.stop
-
-
   test "mixin Pi.get", ctx do
     ctx[:c] |> E.query ["SET", "Pi", "3.14"]
 

@@ -26,10 +26,6 @@ defmodule ApiTest do
     { :ok, [c: client] }
   end
 
-  teardown ctx, do:
-    ctx[:c] |> E.stop
-
-
   test "mixin", c do
     assert (c[:c] |> ApiMixin.set) == :ok
     assert (c[:c] |> ApiMixin.get) == "value"

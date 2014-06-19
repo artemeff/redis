@@ -26,9 +26,6 @@ defmodule ScriptTest do
     { :ok, [c: client] }
   end
 
-  teardown ctx, do:
-    ctx[:c] |> E.stop
-
   test "script load", c do
     assert (c[:c] |> R.script_load(@lua_script)) == @lua_script_sha
   end
