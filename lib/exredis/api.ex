@@ -9,9 +9,9 @@ defmodule Exredis.Api.Helper do
   defmacro defredis(cmd, args, fun \\ nil) do
     margs = Enum.map args, fn(x) -> {x, [], ExRedis.Api.Helper} end
     cmd = if is_list(cmd), do: cmd, else: [cmd]
-    cmd_name = Enum.map(cmd, fn(x) -> atom_to_list(x) end)
-      |> Enum.join("_") |> binary_to_atom
-    method = Enum.map cmd, fn(x) -> atom_to_binary(x) |> String.upcase end
+    cmd_name = Enum.map(cmd, fn(x) -> Atom.to_char_list(x) end)
+      |> Enum.join("_") |> String.to_atom
+    method = Enum.map cmd, fn(x) -> Atom.to_string(x) |> String.upcase end
     quote do
       def unquote(cmd_name)(client, unquote_splicing(margs)) do
         f = unquote(fun)
@@ -198,7 +198,7 @@ defmodule Exredis.Api do
   # defredis :zscan, [:key, :cursor]
 
   defp int_reply(reply), do:
-    reply |> binary_to_integer
+    reply |> String.to_integer
 
   defp multi_int_reply(reply), do:
     reply |> Enum.map &int_reply/1
