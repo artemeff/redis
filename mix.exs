@@ -3,9 +3,12 @@ defmodule Exredis.Mixfile do
 
   def project do
     [ app: :exredis,
-      version: "0.1.0-pre.4",
+      version: "0.1.0",
       elixir: ">= 0.13.0",
-      deps: deps(Mix.env) ]
+      deps: deps,
+      package: package,
+      description: "Redis client for Elixir",
+      docs: [readme: true, main: "README.md"] ]
   end
 
   # Configuration for the OTP application
@@ -14,7 +17,17 @@ defmodule Exredis.Mixfile do
   end
 
   # Dependencies
-  defp deps(_), do:
-    [{ :eredis, "1.0.6", github: "wooga/eredis", ref: "471dd" }]
+  defp deps do
+    [
+      { :eredis, "1.0.6", github: "wooga/eredis", ref: "471dd" }
+    ]
+  end
 
+  defp package do
+    [
+      contributors: ["Yuri Artemev"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/artemeff/exredis"}
+    ]
+  end
 end
