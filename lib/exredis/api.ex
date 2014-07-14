@@ -98,7 +98,7 @@ defmodule Exredis.Api do
   defredis :incr, [:key], &int_reply/1
   defredis :incrby, [:key, :increment], &int_reply/1
   defredis :incrbyfloat, [:key, :increment]
-  # defredis :info, []
+  defredis :info, [:key]
   defredis :keys, [:pattern]
   defredis :lastsave, []
   defredis :lindex, [:key, :index]

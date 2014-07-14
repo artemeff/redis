@@ -192,6 +192,10 @@ defmodule ApiTest do
     assert (c[:c] |> R.get "mykey") == "10.6"
   end
 
+  test "info", c do
+    assert nil?(c[:c] |> R.info "stats") == false
+  end
+
   test "set", c do
     assert (c[:c] |> R.set "key-2", "value-2") == :ok
     assert (c[:c] |> R.get "key-2") == "value-2"
