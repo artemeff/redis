@@ -7,3 +7,5 @@ before_install:
   - export PATH="$PATH:$PWD/vendor/elixir/bin"
   - mix local.hex --force
 script: "MIX_ENV=test mix do deps.get, test"
+services:
+  - redis-server
