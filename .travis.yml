@@ -2,9 +2,8 @@ language: erlang
 otp_release:
   - 17.0
 before_install:
-  - git clone git://github.com/elixir-lang/elixir --depth 1
-  - make -C elixir
-before_script: "export PATH=`pwd`/elixir/bin:$PATH"
+  - mkdir -p vendor/elixir
+  - wget -q https://github.com/elixir-lang/elixir/releases/download/v0.14.0/Precompiled.zip && unzip -qq Precompiled.zip -d vendor/elixir
+  - export PATH="$PATH:$PWD/vendor/elixir/bin"
+  - mix local.hex --force
 script: "MIX_ENV=test mix do deps.get, test"
-services:
-  - redis-server
