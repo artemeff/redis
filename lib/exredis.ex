@@ -12,18 +12,25 @@ defmodule Exredis do
   @type reconnect_sleep :: :no_reconnect | integer
   @type start_link      :: { :ok, pid } | { :error, term }
 
+
   @doc """
-  Connect to the Redis server, erlang way:
+  Connect to the Redis server using a connection string:
 
-  * `start_link`
-  * `start_link('127.0.0.1', 6379)`
+  * `start_using_connection_string("redis://user:password@127.0.0.1:6379")`
+  * `start_using_connection_string("redis://127.0.0.1:6379")`
 
-  Returns tuple { :ok, pid }
+  Returns pid of the connected client
   """
-  @spec start_link(list, integer, integer, list, reconnect_sleep) :: start_link
-  def start_link(host \\ '127.0.0.1', port \\ 6379, database \\ 0,
-                 password \\ '', reconnect_sleep \\ :no_reconnect), do:
-    :eredis.start_link(host, port, database, password, reconnect_sleep)
+  @spec start_using_connection_string(binary, :no_reconnect | integer) :: pid
+  def start_using_connection_string(connection_string, database \\ 0, reconnect_sleep \\ :no_reconnect)  do
+    config = Exredis.ConnectionString.parse(connection_string)
+
+    # FIXME: Make the "start" method use binary strings as well and put the translation at the lowest possible level?
+    host = config.host |> String.to_char_list
+    password = config.password |> String.to_char_list
+    port = config.port
+    start(host, port, database, password, reconnect_sleep)
+  end
 
   @doc """
   Connect to the Redis server:
@@ -36,8 +43,21 @@ defmodule Exredis do
   @spec start(list, integer, integer, list, :no_reconnect | integer) :: pid
   def start(host \\ '127.0.0.1', port \\ 6379, database \\ 0,
             password \\ '', reconnect_sleep \\ :no_reconnect), do:
-    :eredis.start_link(host, port, database, password, reconnect_sleep)
+    start_link(host, port, database, password, reconnect_sleep)
     |> elem 1
+
+  @doc """
+  Connect to the Redis server, erlang way:
+
+  * `start_link`
+  * `start_link('127.0.0.1', 6379)`
+
+  Returns tuple { :ok, pid }
+  """
+  @spec start_link(list, integer, integer, list, reconnect_sleep) :: start_link
+  def start_link(host \\ '127.0.0.1', port \\ 6379, database \\ 0,
+                 password \\ '', reconnect_sleep \\ :no_reconnect), do:
+    :eredis.start_link(host, port, database, password, reconnect_sleep)
 
   @doc """
   Disconnect from the Redis server:
@@ -76,5 +96,4 @@ defmodule Exredis do
   @spec query_pipe(pid, list) :: any
   def query_pipe(client, command) when is_pid(client) and is_list(command), do:
     client |> :eredis.qp command
-
 end
