@@ -60,6 +60,8 @@ __Connect to the Redis server__
 client = Exredis.start
 # or
 { :ok, client } = Exredis.start_link
+# or
+{ :ok, client } = Exredis.start_using_connection_string("redis://127.0.0.1:6379")
 ```
 
 __Disconnect from the server__
