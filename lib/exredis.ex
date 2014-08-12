@@ -15,8 +15,8 @@ defmodule Exredis do
   @doc """
   Connect to the Redis server, erlang way:
 
-  * `start`
-  * `start('127.0.0.1', 6379)`
+  * `start_link`
+  * `start_link('127.0.0.1', 6379)`
 
   Returns tuple { :ok, pid }
   """
