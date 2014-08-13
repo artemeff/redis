@@ -16,15 +16,15 @@ defmodule Exredis.ConnectionString do
       |> String.split("@")
   end
 
-  defp convert_to_config([ path ]) do
-    [ host, port ] = parse_host_and_port(path)
-    password = ""
-    %Config{ host: host, port: port, password: password }
-  end
-
   defp convert_to_config([ auth, path ]) do
     [ host, port ] = parse_host_and_port(path)
     password = parse_password(auth)
+    %Config{ host: host, port: port, password: password }
+  end
+
+  defp convert_to_config([ path ]) do
+    [ host, port ] = parse_host_and_port(path)
+    password = ""
     %Config{ host: host, port: port, password: password }
   end
 
