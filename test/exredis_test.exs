@@ -44,6 +44,10 @@ defmodule ExredisTest do
     assert pid |> is_pid
   end
 
+  test "connect using connection string" do
+    assert E.start_using_connection_string("redis://127.0.0.1:6379") |> is_pid
+  end
+
   test "disconnect" do
     assert (E.start |> E.stop) == :ok
   end
