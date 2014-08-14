@@ -59,9 +59,10 @@ __Connect to the Redis server__
 ```elixir
 client = Exredis.start
 # or
-{ :ok, client } = Exredis.start_link
+client = Exredis.start_using_connection_string("redis://127.0.0.1:6379")
 # or
-{ :ok, client } = Exredis.start_using_connection_string("redis://127.0.0.1:6379")
+{ :ok, client } = Exredis.start_link
+
 ```
 
 __Disconnect from the server__
