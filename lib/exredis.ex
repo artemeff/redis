@@ -16,20 +16,15 @@ defmodule Exredis do
   @doc """
   Connect to the Redis server using a connection string:
 
-  * `start_using_connection_string("redis://user:password@127.0.0.1:6379")`
+  * `start_using_connection_string("redis://user:password@127.0.0.1:6379/0")`
   * `start_using_connection_string("redis://127.0.0.1:6379")`
 
   Returns pid of the connected client
   """
   @spec start_using_connection_string(binary, :no_reconnect | integer) :: pid
-  def start_using_connection_string(connection_string, database \\ 0, reconnect_sleep \\ :no_reconnect)  do
+  def start_using_connection_string(connection_string, reconnect_sleep \\ :no_reconnect)  do
     config = Exredis.ConnectionString.parse(connection_string)
-
-    # FIXME: Make the "start" method use binary strings as well and put the translation at the lowest possible level?
-    host = config.host |> String.to_char_list
-    password = config.password |> String.to_char_list
-    port = config.port
-    start(host, port, database, password, reconnect_sleep)
+    start(config.host, config.port, config.db, config.password, reconnect_sleep)
   end
 
   @doc """
