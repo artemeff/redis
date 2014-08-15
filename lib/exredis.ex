@@ -35,7 +35,7 @@ defmodule Exredis do
 
   Returns pid of the connected client
   """
-  @spec start(list, integer, integer, list, :no_reconnect | integer) :: pid
+  @spec start(binary, integer, integer, binary, :no_reconnect | integer) :: pid
   def start(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
             password \\ "", reconnect_sleep \\ :no_reconnect), do:
     start_link(host, port, database, password, reconnect_sleep)
@@ -49,7 +49,7 @@ defmodule Exredis do
 
   Returns tuple { :ok, pid }
   """
-  @spec start_link(list, integer, integer, list, reconnect_sleep) :: start_link
+  @spec start_link(binary, integer, integer, binary, reconnect_sleep) :: start_link
   def start_link(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
                  password \\ "", reconnect_sleep \\ :no_reconnect), do:
     :eredis.start_link(String.to_char_list(host), port, database, String.to_char_list(password), reconnect_sleep)
