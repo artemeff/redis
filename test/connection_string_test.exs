@@ -15,7 +15,7 @@ defmodule ConnectionStringTest do
     assert config.host == 'host'
     assert config.port == 1234
     assert config.password == 'password'
-    assert config.db == "10"
+    assert config.db == 10
   end
 
   test "parsing a connection string without user" do
