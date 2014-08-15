@@ -31,13 +31,13 @@ defmodule Exredis do
   Connect to the Redis server:
 
   * `start`
-  * `start('127.0.0.1', 6379)`
+  * `start("127.0.0.1", 6379)`
 
   Returns pid of the connected client
   """
-  @spec start(list, integer, integer, list, :no_reconnect | integer) :: pid
-  def start(host \\ '127.0.0.1', port \\ 6379, database \\ 0,
-            password \\ '', reconnect_sleep \\ :no_reconnect), do:
+  @spec start(binary, integer, integer, binary, :no_reconnect | integer) :: pid
+  def start(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
+            password \\ "", reconnect_sleep \\ :no_reconnect), do:
     start_link(host, port, database, password, reconnect_sleep)
     |> elem 1
 
@@ -45,14 +45,14 @@ defmodule Exredis do
   Connect to the Redis server, erlang way:
 
   * `start_link`
-  * `start_link('127.0.0.1', 6379)`
+  * `start_link("127.0.0.1", 6379)`
 
   Returns tuple { :ok, pid }
   """
-  @spec start_link(list, integer, integer, list, reconnect_sleep) :: start_link
-  def start_link(host \\ '127.0.0.1', port \\ 6379, database \\ 0,
-                 password \\ '', reconnect_sleep \\ :no_reconnect), do:
-    :eredis.start_link(host, port, database, password, reconnect_sleep)
+  @spec start_link(binary, integer, integer, binary, reconnect_sleep) :: start_link
+  def start_link(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
+                 password \\ "", reconnect_sleep \\ :no_reconnect), do:
+    :eredis.start_link(String.to_char_list(host), port, database, String.to_char_list(password), reconnect_sleep)
 
   @doc """
   Disconnect from the Redis server:
