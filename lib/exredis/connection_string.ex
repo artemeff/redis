@@ -5,9 +5,9 @@ defmodule Exredis.ConnectionString do
 
   def parse(connection_string) do
     uri = URI.parse(connection_string)
-    
+
     %Config{
-      host:     uri.host |> String.to_char_list,
+      host:     uri.host,
       port:     uri.port,
       password: uri.userinfo |> parse_password,
       db:       uri.path |> parse_db
@@ -19,8 +19,8 @@ defmodule Exredis.ConnectionString do
     path |> String.split("/") |> Enum.at(1) |> String.to_integer
   end
 
-  defp parse_password(nil), do: ''
+  defp parse_password(nil), do: ""
   defp parse_password(auth) do
-    auth |> String.split(":") |> Enum.at(1) |> String.to_char_list
+    auth |> String.split(":") |> Enum.at(1)
   end
 end
