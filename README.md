@@ -9,7 +9,7 @@ Redis client for Elixir
 Add this to the dependencies:
 
 ```elixir
-{ :exredis, github: "artemeff/exredis" }
+{ :exredis, github: "artemeff/exredis", tag: "0.1.0" }
 ```
 
 ---
