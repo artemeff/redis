@@ -193,7 +193,7 @@ defmodule ApiTest do
   end
 
   test "info", c do
-    assert nil?(c[:c] |> R.info "stats") == false
+    assert is_nil(c[:c] |> R.info "stats") == false
   end
 
   test "set", c do
