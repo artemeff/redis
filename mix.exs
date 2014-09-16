@@ -4,7 +4,7 @@ defmodule Exredis.Mixfile do
   def project do
     [ app: :exredis,
       version: "0.1.0",
-      elixir: ">= 0.13.0",
+      elixir: "~> 1.0.0",
       deps: deps,
       package: package,
       description: "Redis client for Elixir",
