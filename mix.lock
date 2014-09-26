@@ -1,1 +1,3 @@
-%{"eredis": {:git, "git://github.com/wooga/eredis.git", "471dd471060daa1d98391cb69ae006f8ba79a042", [ref: "471dd"]}}
+%{"earmark": {:package, "0.1.10"},
+  "eredis": {:git, "git://github.com/wooga/eredis.git", "471dd471060daa1d98391cb69ae006f8ba79a042", [ref: "471dd"]},
+  "ex_doc": {:package, "0.6.0"}}
