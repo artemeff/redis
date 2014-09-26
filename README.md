@@ -2,9 +2,7 @@
 
 ---
 
-[![Build Status](https://travis-ci.org/artemeff/exredis.png?branch=master)](https://travis-ci.org/artemeff/exredis)
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/artemeff/exredis/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Build Status](https://travis-ci.org/artemeff/exredis.png?branch=master)](https://travis-ci.org/artemeff/exredis) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/artemeff/exredis/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ---
 
@@ -18,7 +16,7 @@ Add this to the dependencies:
 
 ---
 
-### Usage
+### Usage ([web docs](http://artemeff.com/exredis/))
 
 __As mixin__
 
