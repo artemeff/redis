@@ -2,7 +2,7 @@
 
 ---
 
-Redis client for Elixir
+[Redis](http://redis.io) client for Elixir.
 
 ---
 
@@ -11,7 +11,7 @@ Redis client for Elixir
 Add this to the dependencies:
 
 ```elixir
-{ :exredis, github: "artemeff/exredis", tag: "0.1.0" }
+{:exredis, github: "artemeff/exredis", tag: "0.1.0"}
 ```
 
 ---
@@ -63,7 +63,7 @@ client = Exredis.start
 # or
 client = Exredis.start_using_connection_string("redis://127.0.0.1:6379")
 # or
-{ :ok, client } = Exredis.start_link
+{:ok, client} = Exredis.start_link
 
 ```
 
@@ -129,7 +129,7 @@ end
 receive do
   msg ->
     IO.inspect msg
-    # => { :subscribed, "foo", #PID<0.85.0> }
+    # => {:subscribed, "foo", #PID<0.85.0>}
 end
 
 client |> Exredis.Api.publish "foo", "Hello World!"
@@ -137,7 +137,7 @@ client |> Exredis.Api.publish "foo", "Hello World!"
 receive do
   msg ->
     IO.inspect msg
-    # => { :message, "foo", "Hello World!", #PID<0.85.0> }
+    # => {:message, "foo", "Hello World!", #PID<0.85.0>}
 end
 ```
 
@@ -155,7 +155,7 @@ end
 receive do
   msg ->
     IO.inspect msg
-    # => { :subscribed, "bar_*", #PID<0.104.0> }
+    # => {:subscribed, "bar_*", #PID<0.104.0>}
 end
 
 client |> Exredis.Api.publish "bar_test", "Hello World!"
@@ -163,7 +163,7 @@ client |> Exredis.Api.publish "bar_test", "Hello World!"
 receive do
   msg ->
     IO.inspect msg
-    # => { :pmessage, "bar_*", "bar_test", "Hello World!", #PID<0.104.0> }
+    # => {:pmessage, "bar_*", "bar_test", "Hello World!", #PID<0.104.0>}
 end
 ```
 
