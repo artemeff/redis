@@ -14,12 +14,12 @@ defmodule Exredis do
 
 
   @doc """
-  Connect to the Redis server using a connection string:
+  Connects to the Redis server using a connection string:
 
   * `start_using_connection_string("redis://user:password@127.0.0.1:6379/0")`
   * `start_using_connection_string("redis://127.0.0.1:6379")`
 
-  Returns pid of the connected client
+  Returns the pid of the connected client.
   """
   @spec start_using_connection_string(binary, :no_reconnect | integer) :: pid
   def start_using_connection_string(connection_string, reconnect_sleep \\ :no_reconnect)  do
@@ -28,12 +28,12 @@ defmodule Exredis do
   end
 
   @doc """
-  Connect to the Redis server:
+  Connects to the Redis server:
 
   * `start`
   * `start("127.0.0.1", 6379)`
 
-  Returns pid of the connected client
+  Returns the pid of the connected client.
   """
   @spec start(binary, integer, integer, binary, :no_reconnect | integer) :: pid
   def start(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
@@ -42,12 +42,12 @@ defmodule Exredis do
     |> elem 1
 
   @doc """
-  Connect to the Redis server, erlang way:
+  Connects to the Redis server, Erlang way:
 
   * `start_link`
   * `start_link("127.0.0.1", 6379)`
 
-  Returns tuple { :ok, pid }
+  Returns a tuple `{:ok, pid}`.
   """
   @spec start_link(binary, integer, integer, binary, reconnect_sleep) :: start_link
   def start_link(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
@@ -55,40 +55,39 @@ defmodule Exredis do
     :eredis.start_link(String.to_char_list(host), port, database, String.to_char_list(password), reconnect_sleep)
 
   @doc """
-  Disconnect from the Redis server:
+  Disconnects from the Redis server:
 
   `stop client`
 
-  Client is a pid getting from start command
+  `client` is a `pid` like the one returned by `Exredis.start`.
   """
   @spec stop(pid) :: :ok
   def stop(client), do:
     client |> :eredis.stop
 
   @doc """
-  Make query
+  Performs a query with the given arguments on the connected `client`.
 
   * `query(client, ["SET", "foo", "bar"])`
   * `query(client, ["GET", "foo"])`
   * `query(client, ["MSET" | ["k1", "v1", "k2", "v2", "k3", "v3"]])`
   * `query(client, ["MGET" | ["k1", "k2", "k3"]])`
 
-  See more commands in official Redis documentation
+  See all the available commands in the [official Redis
+  documentation](http://redis.io/commands).
   """
   @spec query(pid, list) :: any
   def query(client, command) when is_pid(client) and is_list(command), do:
-    client |> :eredis.q(command) |> elem 1
+    client |> :eredis.q(command) |> elem(1)
 
   @doc """
-  Pipeline query
+  Performs a pipeline query, executing the list of commands.
 
-  ```
-  query_pipe(client, [["SET", :a, "1"],
-                      ["LPUSH", :b, "3"],
-                      ["LPUSH", :b, "2"]])
-  ```
+      query_pipe(client, [["SET", :a, "1"],
+                          ["LPUSH", :b, "3"],
+                          ["LPUSH", :b, "2"]])
   """
-  @spec query_pipe(pid, list) :: any
+  @spec query_pipe(pid, [list]) :: any
   def query_pipe(client, command) when is_pid(client) and is_list(command), do:
-    client |> :eredis.qp command
+    client |> :eredis.qp(command)
 end
