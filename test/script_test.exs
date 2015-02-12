@@ -4,6 +4,7 @@ defmodule LuaScriptMixin do
   defredis_script :return_one, "return 1"
   defredis_script :return_keys, "return KEYS"
   defredis_script :return_keys_and_argv, "return {KEYS, ARGV}"
+  defredis_script :return_one_file, file_path: "test/example_script.lua"
 end
 
 defmodule ScriptTest do
@@ -69,6 +70,10 @@ defmodule ScriptTest do
   test "defredis_script with keys and argv", c do
     assert (c[:c] |> LuaScriptMixin.return_keys_and_argv([:key1, :key2], [:argv1]))
       == [["key1", "key2"], ["argv1"]]
+  end
+
+  test "defredis_script with file_path", c do
+    assert (c[:c] |> LuaScriptMixin.return_one_file) == "from_file"
   end
 
 end
