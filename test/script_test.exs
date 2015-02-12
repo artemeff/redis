@@ -76,4 +76,13 @@ defmodule ScriptTest do
     assert (c[:c] |> LuaScriptMixin.return_one_file) == "from_file"
   end
 
+  test "throws error if file does not exist" do
+    err = catch_error(defmodule LuaScriptMixinErr do
+      use Exredis.Script
+      defredis_script :return_one_file, file_path: "test/missing_scrip_file.lua"
+    end)
+
+    assert err == "Script file is missing at test/missing_scrip_file.lua"
+  end
+
 end
