@@ -18,6 +18,14 @@ defmodule ConnectionStringTest do
     assert config.db == 10
   end
 
+  test "parsing a connection string with trailing slash" do
+    config = Exredis.ConnectionString.parse("redis://user:password@host:1234/")
+    assert config.host == "host"
+    assert config.port == 1234
+    assert config.password == "password"
+    assert config.db == 0
+  end
+
   test "parsing a connection string without user" do
     config = Exredis.ConnectionString.parse("redis://:password@host:1234")
     assert config.host == "host"
