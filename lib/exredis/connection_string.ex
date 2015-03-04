@@ -15,6 +15,7 @@ defmodule Exredis.ConnectionString do
   end
 
   defp parse_db(nil), do: 0
+  defp parse_db("/"), do: 0
   defp parse_db(path) do
     path |> String.split("/") |> Enum.at(1) |> String.to_integer
   end
