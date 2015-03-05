@@ -3,7 +3,7 @@ defmodule Exredis.Mixfile do
 
   def project do
     [ app: :exredis,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.0.0",
       name: "exredis",
       source_url: "https://github.com/artemeff/exredis",
@@ -22,7 +22,7 @@ defmodule Exredis.Mixfile do
   # Dependencies
   defp deps do
     [
-      { :eredis,  "1.0.6", github: "wooga/eredis", ref: "471dd" },
+      { :eredis,  ">= 1.0.7" },
       { :earmark, ">= 0.1.0", only: :dev },
       { :ex_doc,  "~> 0.5", only: :dev }
     ]
@@ -30,7 +30,9 @@ defmodule Exredis.Mixfile do
 
   defp package do
     [
-      contributors: ["Yuri Artemev"],
+      contributors: ["Yuri Artemev", "Joakim Kolsjö", "lastcanal", "Aidan Steele",
+        "Andrea Leopardi", "Ismael Abreu", "David Rouchy", "David Copeland",
+        "Psi", "Andrew Forward", "Sean Stavropoulos"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/artemeff/exredis"}
     ]

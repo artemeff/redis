@@ -11,7 +11,7 @@
 Add this to the dependencies:
 
 ```elixir
-{:exredis, github: "artemeff/exredis", tag: "0.1.0"}
+{ :exredis, ">= 0.1.1" }
 ```
 
 ---
