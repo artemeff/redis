@@ -16,7 +16,7 @@ Add this to the dependencies:
 
 ---
 
-### Usage ([web docs](http://artemeff.com/exredis/))
+### Usage ([web docs](http://hexdocs.pm/exredis/))
 
 __As mixin__
 
