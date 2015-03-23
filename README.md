@@ -1,4 +1,4 @@
-### exredis [![Build Status](https://travis-ci.org/artemeff/exredis.png?branch=master)](https://travis-ci.org/artemeff/exredis)
+### exredis [![Build Status](https://img.shields.io/travis/artemeff/exredis.svg)](https://travis-ci.org/artemeff/exredis) [![Hex.pm](https://img.shields.io/hexpm/v/exredis.svg)](https://hex.pm/packages/exredis)
 
 ---
 
