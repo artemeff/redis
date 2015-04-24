@@ -21,11 +21,7 @@ defmodule Exredis.Mixfile do
 
   # Dependencies
   defp deps do
-    [
-      { :eredis,  ">= 1.0.7" },
-      { :earmark, ">= 0.1.0", only: :dev },
-      { :ex_doc,  "~> 0.5", only: :dev }
-    ]
+    [{:eredis,  ">= 1.0.7"}]
   end
 
   defp package do
