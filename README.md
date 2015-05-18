@@ -178,6 +178,7 @@ defmodule MyScripts do
   use Exredis.Script
 
   defredis_script :lua_echo, "return ARGV[1]"
+  defredis_script :huge_command, file_path: "lua_scripts/huge_command.lua"
 end
 
 client |> MyScripts.lua_echo(["mykey"], ["foo"])
