@@ -104,6 +104,6 @@ defmodule ExredisTest do
     client = E.start
 
     status = E.query_pipe(client, query)
-    assert status == [ok: "OK", ok: "1", ok: "2"]
+    assert status == ["OK", "1", "2"]
   end
 end

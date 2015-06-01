@@ -104,5 +104,5 @@ defmodule Exredis do
   """
   @spec query_pipe(pid, [list]) :: any
   def query_pipe(client, command) when is_pid(client) and is_list(command), do:
-    client |> :eredis.qp(command)
+    client |> :eredis.qp(command) |> Enum.map(&elem(&1, 1))
 end
