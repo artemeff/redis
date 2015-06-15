@@ -16,7 +16,7 @@ defmodule Exredis.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    []
+    [applications: [:eredis]]
   end
 
   # Dependencies
