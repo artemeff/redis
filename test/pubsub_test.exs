@@ -10,7 +10,7 @@ defmodule PubsubTest do
     client_sub = S.start
     client = E.start
     pid = Kernel.self
-    
+
     client_sub |> S.subscribe "foo", fn(msg) ->
       send(pid, msg)
     end
@@ -29,15 +29,49 @@ defmodule PubsubTest do
         assert (msg |> elem 0) == :message
         assert (msg |> elem 1) == "foo"
         assert (msg |> elem 2) == "Hello World!"
-        
+
     end
   end
+
+
+  test "pub/sub with multiple channels" do
+    client_sub = S.start
+    client = E.start
+    pid = Kernel.self
+
+    client_sub |> S.subscribe ["foo", "bar"], fn(msg) ->
+      send(pid, msg)
+    end
+
+    receive do
+      msg ->
+        assert (msg |> elem 0) == :subscribed
+        assert (msg |> elem 1) == "foo"
+    end
+
+    receive do
+      msg ->
+        assert (msg |> elem 0) == :subscribed
+        assert (msg |> elem 1) == "bar"
+    end
+
+    client |> R.publish "foo", "Hello World!"
+
+    receive do
+      msg ->
+        assert (msg |> elem 0) == :message
+        assert (msg |> elem 1) == "foo"
+        assert (msg |> elem 2) == "Hello World!"
+
+    end
+  end
+
 
   test "pub/sub by a pattern" do
     client_sub = S.start
     client = E.start
     pid = Kernel.self
-    
+
     client_sub |> S.psubscribe "bar_*", fn(msg) ->
       send(pid, msg)
     end
