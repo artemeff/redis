@@ -44,11 +44,11 @@ defmodule Exredis do
   @doc """
     Allows poolboy to connect to this by passing a list of args
   """
-  def start_link(system_args) when is_list(system_args) do 
-    system_args = Enum.map(system_args, fn{k,v} -> 
+  def start_link(system_args) when is_list(system_args) do
+    system_args = Enum.map(system_args, fn{k,v} ->
       if is_binary(v) do
         {k, String.to_char_list(v)}
-      else 
+      else
         {k,v}
       end
     end)
@@ -67,7 +67,7 @@ defmodule Exredis do
   def start_link(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
                  password \\ "", reconnect_sleep \\ :no_reconnect) when is_binary(host) do
     :eredis.start_link(String.to_char_list(host), port, database, String.to_char_list(password), reconnect_sleep)
-  end 
+  end
 
   @doc """
   Disconnects from the Redis server:
