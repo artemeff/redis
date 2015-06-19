@@ -61,7 +61,7 @@ defmodule Exredis.Sub do
   def subscribe(client, channel, term) do
     spawn_link fn ->
       :eredis_sub.controlling_process client
-      :eredis_sub.subscribe client, subscription_channel(channel)
+      :eredis_sub.subscribe client, List.wrap(channel)
       receiver(client, term)
     end
   end
@@ -75,14 +75,10 @@ defmodule Exredis.Sub do
   def psubscribe(client, channel, term) do
     spawn_link fn ->
       :eredis_sub.controlling_process client
-      :eredis_sub.psubscribe client, subscription_channel(channel)
+      :eredis_sub.psubscribe client, List.wrap(channel)
       receiver(client, term)
     end
   end
-
-  @spec subscription_channel(term) :: any
-  defp subscription_channel(channel) when is_list(channel), do: channel
-  defp subscription_channel(channel), do: [channel]
 
   @spec ack_message(pid) :: any
   defp ack_message(client) when is_pid(client), do:
