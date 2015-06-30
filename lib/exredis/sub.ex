@@ -42,6 +42,25 @@ defmodule Exredis.Sub do
     |> elem 1
 
   @doc """
+  Connect to the Redis server for subscribe to a channel using a connection string:
+
+  * `start_using_connection_string("redis://user:password@127.0.0.1:6379/0")`
+  * `start_using_connection_string("redis://127.0.0.1:6379")`
+
+  The database number is ignored.
+
+  Returns the pid of the connected client.
+  """
+  @spec start_using_connection_string(binary, reconnect, max_queue, behaviour) :: pid
+  def start_using_connection_string(connection_string \\ "redis://127.0.0.1:6379",
+        reconnect \\ :no_reconnect, max_queue \\ :infinity,
+        behaviour \\ :drop) do
+    config = Exredis.ConnectionString.parse(connection_string)
+    start(config.host, config.port, config.password, reconnect, max_queue, behaviour)
+  end
+
+
+  @doc """
   Disconnect from the Redis server:
 
   * `stop(client)`

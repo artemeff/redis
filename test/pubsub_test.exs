@@ -16,6 +16,10 @@ defmodule PubsubTest do
     assert pid |> is_pid
   end
 
+  test "connect using connection string" do
+    assert S.start_using_connection_string("redis://127.0.0.1:6379") |> is_pid
+  end
+
   test "disconnect" do
     assert (S.start |> S.stop) == :ok
   end
