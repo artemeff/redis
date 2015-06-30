@@ -6,6 +6,20 @@ defmodule PubsubTest do
   alias Exredis.Sub, as: S
   alias Exredis.Api, as: R
 
+  test "connect" do
+    assert S.start |> is_pid
+  end
+
+  test "connect, erlang way" do
+    { :ok, pid } = S.start_link
+
+    assert pid |> is_pid
+  end
+
+  test "disconnect" do
+    assert (S.start |> S.stop) == :ok
+  end
+
   test "pub/sub" do
     client_sub = S.start
     client = E.start
