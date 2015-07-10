@@ -1,7 +1,7 @@
 Code.require_file "test_helper.exs", __DIR__
 
 defmodule Pi do
-  use Exredis
+  import Exredis
 
   # set/get
   def get, do: start |> query ["GET", "Pi"]

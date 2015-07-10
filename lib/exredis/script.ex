@@ -1,10 +1,4 @@
 defmodule Exredis.Script do
-  defmacro __using__(_) do
-    quote do
-      import Exredis.Script
-    end
-  end
-
   defmacro defredis_script(name, file_path: file_path) do
     case File.read(file_path) do
       {:ok, content} -> quote do: defredis_script(unquote(name), unquote(content))

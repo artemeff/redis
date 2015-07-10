@@ -22,7 +22,7 @@ __As mixin__
 
 ```elixir
 defmodule Pi do
-  use Exredis
+  import Exredis
 
   def get, do: start |> query ["GET", "Pi"]
   def set, do: start |> query ["SET", "Pi", "3.14"]
@@ -37,7 +37,7 @@ Pi.get
 
 ```elixir
 defmodule Api do
-  use Exredis.Api
+  import Exredis.Api
 
   def set(client), do:
     client |> set "key", "value"
@@ -168,6 +168,7 @@ end
 ```
 
 __Scripting__
+
 ```elixir
 client |> Exredis.Api.script_load "return 1 + 1"
 # => "c301e0c5bc3538d2bad3fdbf2e281887e643ada4"
@@ -175,7 +176,7 @@ client |> Exredis.Api.evalsha "c301e0c5bc3538d2bad3fdbf2e281887e643ada4", 0, ["k
 # => "2"
 
 defmodule MyScripts do
-  use Exredis.Script
+  import Exredis.Script
 
   defredis_script :lua_echo, "return ARGV[1]"
   defredis_script :huge_command, file_path: "lua_scripts/huge_command.lua"

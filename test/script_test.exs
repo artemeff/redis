@@ -1,5 +1,5 @@
 defmodule LuaScriptMixin do
-  use Exredis.Script
+  import Exredis.Script
 
   defredis_script :return_one, "return 1"
   defredis_script :return_keys, "return KEYS"
@@ -78,7 +78,7 @@ defmodule ScriptTest do
 
   test "throws error if file does not exist" do
     err = catch_error(defmodule LuaScriptMixinErr do
-      use Exredis.Script
+      import Exredis.Script
       defredis_script :return_one_file, file_path: "test/missing_scrip_file.lua"
     end)
 

@@ -1,11 +1,4 @@
 defmodule Exredis.Api.Helper do
-  defmacro __using__(_) do
-    quote do
-      import Exredis, only: [query: 2]
-      import Exredis.Api.Helper
-    end
-  end
-
   defmacro defredis(cmd, args, fun \\ nil) do
     margs = Enum.map args, fn(x) -> {x, [], ExRedis.Api.Helper} end
     cmd = if is_list(cmd), do: cmd, else: [cmd]
@@ -32,13 +25,7 @@ defmodule Exredis.Api do
   High-level API
   """
 
-  use Exredis.Api.Helper
-
-  defmacro __using__(_opts) do
-    quote do
-      import Exredis.Api
-    end
-  end
+  import Exredis.Api.Helper
 
   def defaultclient do
     pid = Process.whereis(:exredis_hapi_default_client)

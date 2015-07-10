@@ -3,15 +3,8 @@ defmodule Exredis do
   Redis client for Elixir
   """
 
-  defmacro __using__(_opts) do
-    quote do
-      import Exredis
-    end
-  end
-
   @type reconnect_sleep :: :no_reconnect | integer
   @type start_link      :: { :ok, pid } | { :error, term }
-
 
   @doc """
   Connects to the Redis server using a connection string:

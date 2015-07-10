@@ -3,12 +3,6 @@ defmodule Exredis.Sub do
   Subscribe functions for exredis
   """
 
-  defmacro __using__(_opts) do
-    quote do
-      import Exredis.Sub
-    end
-  end
-
   @type reconnect  :: :no_reconnect | integer
   @type max_queue  :: :infinity | integer
   @type behaviour  :: :drop | :exit
