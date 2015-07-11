@@ -1,17 +1,21 @@
 defmodule Exredis.Mixfile do
   use Mix.Project
 
+  @version "0.2.0"
+
   def project do
-    [ app: :exredis,
-      version: "0.2.0",
-      elixir: "~> 1.0.0",
-      name: "exredis",
-      source_url: "https://github.com/artemeff/exredis",
-      homepage_url: "http://artemeff.github.io/exredis",
-      deps: deps,
-      package: package,
-      description: "Redis client for Elixir",
-      docs: [readme: true, main: "README.md"] ]
+    [app: :exredis,
+     version: @version,
+     elixir: "~> 1.0.0",
+     name: "exredis",
+     source_url: "https://github.com/artemeff/exredis",
+     homepage_url: "http://artemeff.github.io/exredis",
+     deps: deps,
+     package: package,
+     description: "Redis client for Elixir",
+     docs: [readme: "README.md", main: "README",
+            source_ref: "v#{@version}",
+            source_url: "https://github.com/artemeff/exredis"]]
   end
 
   # Configuration for the OTP application
@@ -21,16 +25,16 @@ defmodule Exredis.Mixfile do
 
   # Dependencies
   defp deps do
-    [{:eredis,  ">= 1.0.8"}]
+    [{:eredis,  ">= 1.0.8"},
+     {:earmark, "~> 0.1", only: :dev},
+     {:ex_doc, "~> 0.7", only: :dev}]
   end
 
   defp package do
-    [
-      contributors: ["Yuri Artemev", "Joakim Kolsjö", "lastcanal", "Aidan Steele",
-        "Andrea Leopardi", "Ismael Abreu", "David Rouchy", "David Copeland",
-        "Psi", "Andrew Forward", "Sean Stavropoulos"],
-      licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/artemeff/exredis"}
-    ]
+    [contributors: ["Yuri Artemev", "Joakim Kolsjö", "lastcanal", "Aidan Steele",
+      "Andrea Leopardi", "Ismael Abreu", "David Rouchy", "David Copeland",
+      "Psi", "Andrew Forward", "Sean Stavropoulos"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/artemeff/exredis"}]
   end
 end

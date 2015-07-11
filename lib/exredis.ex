@@ -35,7 +35,7 @@ defmodule Exredis do
     |> elem 1
 
   @doc """
-    Allows poolboy to connect to this by passing a list of args
+  Allows poolboy to connect to this by passing a list of args
   """
   def start_link(system_args) when is_list(system_args) do
     system_args = Enum.map(system_args, fn{k,v} ->
