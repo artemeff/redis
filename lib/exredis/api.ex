@@ -184,8 +184,13 @@ defmodule Exredis.Api do
   # defredis :hscan, [:key, :cursor]
   # defredis :zscan, [:key, :cursor]
 
-  defp int_reply(reply), do:
-    reply |> String.to_integer
+  defp int_reply(reply) do
+    try do
+      reply |> String.to_integer
+    rescue
+      _ in ArgumentError -> reply
+    end
+  end
 
   defp multi_int_reply(reply), do:
     reply |> Enum.map &int_reply/1

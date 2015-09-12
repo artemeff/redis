@@ -326,6 +326,17 @@ defmodule ApiTest do
   end
 
   ##
+  # Multi
+  ##
+
+  test "multi", c do
+    assert (c[:c] |> R.multi) == "OK"
+    assert (c[:c] |> R.set "incrm", 0) == "QUEUED"
+    assert (c[:c] |> R.incr "incrm") == "QUEUED"
+    assert (c[:c] |> R.exec) == ["OK", "1"]
+  end
+
+  ##
   # Pub/Sub
   ##
 
