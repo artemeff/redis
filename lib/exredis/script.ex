@@ -6,7 +6,7 @@ defmodule Exredis.Script do
     end
   end
   defmacro defredis_script(name, script) do
-    script_sha = :crypto.hash(:sha, script)
+    script_sha = :crypto.hash(:sha, script) |> Base.encode16
     quote bind_quoted: [script_sha: script_sha, name: name, script: script] do
       def unquote(name)(client, keys \\ [], argv \\ []) do
         query_args = [length(keys)] ++ keys ++ argv
