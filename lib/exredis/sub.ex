@@ -16,24 +16,43 @@ defmodule Exredis.Sub do
   * `start_link("127.0.0.1", 6379, "with_password")`
   """
   @spec start_link(binary, integer, binary, reconnect, max_queue, behaviour) :: start_link
-  def start_link(host \\ "127.0.0.1", port \\ 6379, password \\ "",
+  def start_link(host, port, password \\ "",
             reconnect \\ :no_reconnect, max_queue \\ :infinity,
             behaviour \\ :drop), do:
     :eredis_sub.start_link(String.to_char_list(host), port, String.to_char_list(password), reconnect, max_queue, behaviour)
 
+
+  def start_link do
+    config = Exredis.Config.fetch_env
+
+    :eredis_sub.start_link(String.to_char_list(config.host), config.port, String.to_char_list(config.password), config.reconnect, config.max_queue, config.behaviour)
+  end
+
   @doc """
   Connect to the Redis server for subscribe to a channel
 
-  * `start`
   * `start("127.0.0.1", 6379)`
   * `start("127.0.0.1", 6379, "with_password")`
   """
   @spec start(binary, integer, binary, reconnect, max_queue, behaviour) :: pid
-  def start(host \\ "127.0.0.1", port \\ 6379, password \\ "",
-            reconnect \\ :no_reconnect, max_queue \\ :infinity,
-            behaviour \\ :drop), do:
+  def start(host, port, password,
+            reconnect, max_queue,
+            behaviour) do
     start_link(host, port, password, reconnect, max_queue, behaviour)
     |> elem 1
+  end
+  @doc """
+  Connect to the Redis server with default or env settings for subscribe to a channel
+
+  * `start`
+  """
+  @spec start :: pid
+  def start do
+    config = Exredis.Config.fetch_env
+
+    start_link(config.host, config.port, config.password, config.reconnect, config.max_queue, config.behaviour)
+    |> elem 1    
+  end
 
   @doc """
   Connect to the Redis server for subscribe to a channel using a connection string:
@@ -49,7 +68,7 @@ defmodule Exredis.Sub do
   def start_using_connection_string(connection_string \\ "redis://127.0.0.1:6379",
         reconnect \\ :no_reconnect, max_queue \\ :infinity,
         behaviour \\ :drop) do
-    config = Exredis.ConnectionString.parse(connection_string)
+    config = Exredis.Config.parse(connection_string)
     start(config.host, config.port, config.password, reconnect, max_queue, behaviour)
   end
 

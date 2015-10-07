@@ -4,14 +4,14 @@ defmodule ConnectionStringTest do
   use ExUnit.Case, async: true
 
   test "parsing a connection string" do
-    config = Exredis.ConnectionString.parse("redis://user:password@host:1234")
+    config = Exredis.Config.parse("redis://user:password@host:1234")
     assert config.host == "host"
     assert config.port == 1234
     assert config.password == "password"
   end
 
   test "parsing a connection string with db" do
-    config = Exredis.ConnectionString.parse("redis://user:password@host:1234/10")
+    config = Exredis.Config.parse("redis://user:password@host:1234/10")
     assert config.host == "host"
     assert config.port == 1234
     assert config.password == "password"
@@ -19,7 +19,7 @@ defmodule ConnectionStringTest do
   end
 
   test "parsing a connection string with trailing slash" do
-    config = Exredis.ConnectionString.parse("redis://user:password@host:1234/")
+    config = Exredis.Config.parse("redis://user:password@host:1234/")
     assert config.host == "host"
     assert config.port == 1234
     assert config.password == "password"
@@ -27,14 +27,14 @@ defmodule ConnectionStringTest do
   end
 
   test "parsing a connection string without user" do
-    config = Exredis.ConnectionString.parse("redis://:password@host:1234")
+    config = Exredis.Config.parse("redis://:password@host:1234")
     assert config.host == "host"
     assert config.port == 1234
     assert config.password == "password"
   end
 
   test "parsing a connection string without password" do
-    config = Exredis.ConnectionString.parse("redis://host:1234")
+    config = Exredis.Config.parse("redis://host:1234")
     assert config.host == "host"
     assert config.port == 1234
     assert config.password == ""

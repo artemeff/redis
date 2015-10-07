@@ -15,24 +15,39 @@ defmodule Exredis do
   Returns the pid of the connected client.
   """
   @spec start_using_connection_string(binary, :no_reconnect | integer) :: pid
-  def start_using_connection_string(connection_string, reconnect_sleep \\ :no_reconnect)  do
-    config = Exredis.ConnectionString.parse(connection_string)
+  def start_using_connection_string(connection_string \\ "redis://127.0.0.1:6379", reconnect_sleep \\ :no_reconnect)  do
+    config = Exredis.Config.parse(connection_string)
     start(config.host, config.port, config.db, config.password, reconnect_sleep)
   end
 
   @doc """
   Connects to the Redis server:
 
-  * `start`
   * `start("127.0.0.1", 6379)`
+  * `start("127.0.0.1", 6379, 0, "", :no_reconnect)`
 
   Returns the pid of the connected client.
   """
   @spec start(binary, integer, integer, binary, :no_reconnect | integer) :: pid
-  def start(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
+  def start(host, port, database \\ 0,
             password \\ "", reconnect_sleep \\ :no_reconnect), do:
     start_link(host, port, database, password, reconnect_sleep)
     |> elem 1
+
+
+  @doc """
+  Connects to the Redis server with default or environment settings:
+
+  * `start`
+
+  Returns the pid of the connected client.
+  """
+  @spec start :: pid
+  def start do
+    config = Exredis.Config.fetch_env
+    start_link(config.host, config.port, config.db, config.password, config.reconnect)
+    |> elem 1
+  end
 
   @doc """
   Allows poolboy to connect to this by passing a list of args
@@ -51,15 +66,27 @@ defmodule Exredis do
   @doc """
   Connects to the Redis server, Erlang way:
 
-  * `start_link`
   * `start_link("127.0.0.1", 6379)`
 
   Returns a tuple `{:ok, pid}`.
   """
   @spec start_link(binary, integer, integer, binary, reconnect_sleep) :: start_link
-  def start_link(host \\ "127.0.0.1", port \\ 6379, database \\ 0,
+  def start_link(host, port, database \\ 0,
                  password \\ "", reconnect_sleep \\ :no_reconnect) when is_binary(host) do
     :eredis.start_link(String.to_char_list(host), port, database, String.to_char_list(password), reconnect_sleep)
+  end
+
+  @doc """
+  Connects to the Redis server, Erlang way:
+
+  * `start_link`
+
+  Returns a tuple `{:ok, pid}`.
+  """
+  @spec start_link :: start_link
+  def start_link do
+    config = Exredis.Config.fetch_env
+    :eredis.start_link(String.to_char_list(config.host), config.port, config.db, String.to_char_list(config.password), config.reconnect)
   end
 
   @doc """
