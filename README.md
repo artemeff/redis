@@ -16,6 +16,20 @@ Add this to the dependencies:
 
 ---
 
+### Configuration
+
+In your applications config.exs file you need to add new section for customizing redis connection.
+
+```elixir
+  config :exredis,
+    host: "127.0.0.1",
+    port: 6379,
+    password: "",
+    db: 0,
+    reconnect: :no_reconnect,
+    max_queue: :infinity
+```
+
 ### Usage ([web docs](http://hexdocs.pm/exredis/))
 
 __As mixin__

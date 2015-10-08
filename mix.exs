@@ -6,7 +6,7 @@ defmodule Exredis.Mixfile do
   def project do
     [app: :exredis,
      version: @version,
-     elixir: "~> 1.0.0",
+     elixir: "~> 1.0",
      name: "exredis",
      source_url: "https://github.com/artemeff/exredis",
      homepage_url: "http://artemeff.github.io/exredis",
