@@ -32,7 +32,7 @@ defmodule Exredis.Mixfile do
   end
 
   defp package do
-    [contributors: ["Yuri Artemev", "Joakim Kolsjö", "lastcanal", "Aidan Steele",
+    [maintainers: ["Yuri Artemev", "Joakim Kolsjö", "lastcanal", "Aidan Steele",
       "Andrea Leopardi", "Ismael Abreu", "David Rouchy", "David Copeland",
       "Psi", "Andrew Forward", "Sean Stavropoulos"],
      licenses: ["MIT"],
