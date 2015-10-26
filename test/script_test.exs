@@ -17,7 +17,7 @@ defmodule ScriptTest do
   @lua_script_sha_non_existing "9c609a7ccf8e2ef9459f7f88c414c951e3d174d9"
 
   setup do
-    client = E.start
+    {:ok, client} = E.start_link
 
     # clean up database and set test value
     client |> E.query ["FLUSHALL"]

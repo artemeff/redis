@@ -4,8 +4,8 @@ defmodule Pi do
   import Exredis
 
   # set/get
-  def get, do: start |> query ["GET", "Pi"]
-  def set, do: start |> query ["SET", "Pi", "3.14"]
+  def get, do: start_link |> elem(1) |> query ["GET", "Pi"]
+  def set, do: start_link |> elem(1) |> query ["SET", "Pi", "3.14"]
 end
 
 defmodule ExredisTest do
@@ -13,7 +13,7 @@ defmodule ExredisTest do
   alias Exredis, as: E
 
   setup do
-    client = E.start
+    {:ok, client} = E.start_link
 
     # clean up database and set test value
     client |> E.query ["FLUSHALL"]
@@ -35,11 +35,11 @@ defmodule ExredisTest do
   end
 
   test "connect" do
-    assert E.start |> is_pid
+    assert E.start_link |> elem(1) |> is_pid
   end
 
   test "connect, erlang way" do
-    { :ok, pid } = E.start_link
+    {:ok, pid} = E.start_link
 
     assert pid |> is_pid
   end
@@ -49,7 +49,7 @@ defmodule ExredisTest do
   end
 
   test "disconnect" do
-    assert (E.start |> E.stop) == :ok
+    assert (E.start_link |> elem(1) |> E.stop) == :ok
   end
 
   test "set returns OK", ctx do
@@ -81,7 +81,7 @@ defmodule ExredisTest do
   end
 
   test "transactions" do
-    client = E.start
+    {:ok, client} = E.start_link
 
     status = E.query(client, ["MULTI"])
     assert status == "OK"
@@ -101,7 +101,7 @@ defmodule ExredisTest do
 
   test "pipelining" do
     query  = [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]]
-    client = E.start
+    {:ok, client} = E.start_link
 
     status = E.query_pipe(client, query)
     assert status == ["OK", "1", "2"]

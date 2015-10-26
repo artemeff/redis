@@ -11,7 +11,7 @@
 Add this to the dependencies:
 
 ```elixir
-{:exredis, ">= 0.2.1"}
+{:exredis, ">= 0.2.2"}
 ```
 
 ---
@@ -21,13 +21,13 @@ Add this to the dependencies:
 In your applications config.exs file you need to add new section for customizing redis connection.
 
 ```elixir
-  config :exredis,
-    host: "127.0.0.1",
-    port: 6379,
-    password: "",
-    db: 0,
-    reconnect: :no_reconnect,
-    max_queue: :infinity
+config :exredis,
+  host: "127.0.0.1",
+  port: 6379,
+  password: "",
+  db: 0,
+  reconnect: :no_reconnect,
+  max_queue: :infinity
 ```
 
 ### Usage ([web docs](http://hexdocs.pm/exredis/))
@@ -38,8 +38,8 @@ __As mixin__
 defmodule Pi do
   import Exredis
 
-  def get, do: start |> query ["GET", "Pi"]
-  def set, do: start |> query ["SET", "Pi", "3.14"]
+  def get, do: start_link |> elem(1) |> query ["GET", "Pi"]
+  def set, do: start_link |> elem(1) |> query ["SET", "Pi", "3.14"]
 end
 
 Pi.set
@@ -61,7 +61,7 @@ defmodule Api do
 
 end
 
-client = Exredis.start
+{:ok, client} = Exredis.start_link
 
 client |> Api.set
 # => "OK"
@@ -73,12 +73,9 @@ client |> Api.get
 __Connect to the Redis server__
 
 ```elixir
-client = Exredis.start
+{:ok, client} = Exredis.start_link
 # or
 client = Exredis.start_using_connection_string("redis://127.0.0.1:6379")
-# or
-{:ok, client} = Exredis.start_link
-
 ```
 
 __Disconnect from the server__
@@ -132,8 +129,8 @@ client |> Exredis.query_pipe [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b
 __Pub/sub__
 
 ```elixir
-client_sub = Exredis.Sub.start
-client = Exredis.start
+{:ok, client_sub} = Exredis.Sub.start_link
+{:ok, client} = Exredis.start_link
 pid = Kernel.self
 
 client_sub |> Exredis.Sub.subscribe "foo", fn(msg) ->
@@ -158,8 +155,8 @@ end
 __Pub/sub by a pattern__
 
 ```elixir
-client_sub = Exredis.Sub.start
-client = Exredis.start
+{:ok, client_sub} = Exredis.Sub.start_link
+{:ok, client} = Exredis.start_link
 pid = Kernel.self
 
 client_sub |> Exredis.Sub.psubscribe "bar_*", fn(msg) ->

@@ -30,7 +30,7 @@ defmodule Exredis.Api do
   def defaultclient do
     pid = Process.whereis(:exredis_hapi_default_client)
     if !pid do
-      pid = Exredis.start
+      {:ok, pid} = Exredis.start_link
       Process.register pid, :exredis_hapi_default_client
     end
     pid

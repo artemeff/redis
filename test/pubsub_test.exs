@@ -7,11 +7,11 @@ defmodule PubsubTest do
   alias Exredis.Api, as: R
 
   test "connect" do
-    assert S.start |> is_pid
+    assert S.start_link |> elem(1) |> is_pid
   end
 
   test "connect, erlang way" do
-    { :ok, pid } = S.start_link
+    {:ok, pid} = S.start_link
 
     assert pid |> is_pid
   end
@@ -21,12 +21,12 @@ defmodule PubsubTest do
   end
 
   test "disconnect" do
-    assert (S.start |> S.stop) == :ok
+    assert (S.start_link |> elem(1) |> S.stop) == :ok
   end
 
   test "pub/sub" do
-    client_sub = S.start
-    client = E.start
+    {:ok, client_sub} = S.start_link
+    {:ok, client} = E.start_link
     pid = Kernel.self
 
     client_sub |> S.subscribe "foo", fn(msg) ->
@@ -53,8 +53,8 @@ defmodule PubsubTest do
 
 
   test "pub/sub with multiple channels" do
-    client_sub = S.start
-    client = E.start
+    {:ok, client_sub} = S.start_link
+    {:ok, client} = E.start_link
     pid = Kernel.self
 
     client_sub |> S.subscribe ["foo", "bar"], fn(msg) ->
@@ -86,8 +86,8 @@ defmodule PubsubTest do
 
 
   test "pub/sub by a pattern" do
-    client_sub = S.start
-    client = E.start
+    {:ok, client_sub} = S.start_link
+    {:ok, client} = E.start_link
     pid = Kernel.self
 
     client_sub |> S.psubscribe "bar_*", fn(msg) ->

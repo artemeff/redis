@@ -4,7 +4,7 @@ defmodule Exredis do
   """
 
   @type reconnect_sleep :: :no_reconnect | integer
-  @type start_link      :: { :ok, pid } | { :error, term }
+  @type start_link      :: {:ok, pid} | {:error, term}
 
   @doc """
   Connects to the Redis server using a connection string:
@@ -17,33 +17,27 @@ defmodule Exredis do
   @spec start_using_connection_string(binary, :no_reconnect | integer) :: pid
   def start_using_connection_string(connection_string \\ "redis://127.0.0.1:6379", reconnect_sleep \\ :no_reconnect)  do
     config = Exredis.Config.parse(connection_string)
-    start(config.host, config.port, config.db, config.password, reconnect_sleep)
+    start_link(config.host, config.port, config.db, config.password, reconnect_sleep) |> elem(1)
   end
 
-  @doc """
-  Connects to the Redis server:
-
-  * `start("127.0.0.1", 6379)`
-  * `start("127.0.0.1", 6379, 0, "", :no_reconnect)`
-
-  Returns the pid of the connected client.
-  """
+  @doc false
   @spec start(binary, integer, integer, binary, :no_reconnect | integer) :: pid
   def start(host, port, database \\ 0,
-            password \\ "", reconnect_sleep \\ :no_reconnect), do:
+            password \\ "", reconnect_sleep \\ :no_reconnect) do
+    IO.write :stderr, "warning: Exredis.start/5 is deprecated\n" <>
+      Exception.format_stacktrace
+
     start_link(host, port, database, password, reconnect_sleep)
     |> elem 1
+  end
 
 
-  @doc """
-  Connects to the Redis server with default or environment settings:
-
-  * `start`
-
-  Returns the pid of the connected client.
-  """
+  @doc false
   @spec start :: pid
   def start do
+    IO.write :stderr, "warning: Exredis.start/0 is deprecated\n" <>
+      Exception.format_stacktrace
+
     config = Exredis.Config.fetch_env
     start_link(config.host, config.port, config.db, config.password, config.reconnect)
     |> elem 1

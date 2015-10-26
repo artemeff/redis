@@ -6,7 +6,7 @@ defmodule Exredis.Sub do
   @type reconnect  :: :no_reconnect | integer
   @type max_queue  :: :infinity | integer
   @type behaviour  :: :drop | :exit
-  @type start_link :: { :ok, pid } | { :error, term }
+  @type start_link :: {:ok, pid} | {:error, term}
 
   @doc """
   Connect to the Redis server for subscribe to a channel
@@ -28,26 +28,23 @@ defmodule Exredis.Sub do
     :eredis_sub.start_link(String.to_char_list(config.host), config.port, String.to_char_list(config.password), config.reconnect, config.max_queue, config.behaviour)
   end
 
-  @doc """
-  Connect to the Redis server for subscribe to a channel
-
-  * `start("127.0.0.1", 6379)`
-  * `start("127.0.0.1", 6379, "with_password")`
-  """
+  @doc false
   @spec start(binary, integer, binary, reconnect, max_queue, behaviour) :: pid
   def start(host, port, password,
             reconnect, max_queue,
             behaviour) do
+    IO.write :stderr, "warning: Exredis.Sub.start/6 is deprecated\n" <>
+      Exception.format_stacktrace
+
     start_link(host, port, password, reconnect, max_queue, behaviour)
     |> elem 1
   end
-  @doc """
-  Connect to the Redis server with default or env settings for subscribe to a channel
-
-  * `start`
-  """
+  @doc false
   @spec start :: pid
   def start do
+    IO.write :stderr, "warning: Exredis.Sub.start/0 is deprecated\n" <>
+      Exception.format_stacktrace
+
     config = Exredis.Config.fetch_env
 
     start_link(config.host, config.port, config.password, config.reconnect, config.max_queue, config.behaviour)
@@ -69,7 +66,7 @@ defmodule Exredis.Sub do
         reconnect \\ :no_reconnect, max_queue \\ :infinity,
         behaviour \\ :drop) do
     config = Exredis.Config.parse(connection_string)
-    start(config.host, config.port, config.password, reconnect, max_queue, behaviour)
+    start_link(config.host, config.port, config.password, reconnect, max_queue, behaviour) |> elem(1)
   end
 
 

@@ -17,7 +17,7 @@ defmodule ApiTest do
   alias Exredis.Api, as: R
 
   setup do
-    client = E.start
+    {:ok, client} = E.start_link
 
     # clean up database and set test value
     client |> E.query ["FLUSHALL"]
