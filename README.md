@@ -30,6 +30,15 @@ config :exredis,
   max_queue: :infinity
 ```
 
+or
+
+```elixir
+config :exredis,
+  url: "redis://user:password@host:1234/10",
+  reconnect: :no_reconnect,
+  max_queue: :infinity
+```
+
 ### Usage ([web docs](http://hexdocs.pm/exredis/))
 
 __As mixin__
