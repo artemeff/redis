@@ -1,7 +1,7 @@
 Code.require_file "test_helper.exs", __DIR__
 
 defmodule ConfigTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   @redis_url "redis://user:password@host:1234/10"
 
