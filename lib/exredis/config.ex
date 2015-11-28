@@ -3,18 +3,33 @@ defmodule Exredis.Config do
     defstruct host: nil, port: nil, password: nil, db: nil, reconnect: nil, max_queue: nil, behaviour: nil
   end
 
-	def fetch_env do
-    %Config{
-      host:     				Application.get_env(:exredis, :host) || "127.0.0.1",
-      port:     				Application.get_env(:exredis, :port) || 6379,
-      password: 				Application.get_env(:exredis, :password) || "",
-      db:       				Application.get_env(:exredis, :db) || 0,
-      reconnect:  Application.get_env(:exredis, :reconnect) || :no_reconnect,
-      max_queue: 				Application.get_env(:exredis, :max_queue) || :infinity,
-      behaviour:				Application.get_env(:exredis, :behaviour) || :drop
-    }
-	end
+  @default_config %{
+    host: "127.0.0.1",
+    port: 6379,
+    password: "",
+    db: 0,
+    reconnect: :no_reconnect,
+    max_queue: :infinity,
+    behaviour: :drop
+  }
 
+  def settings, do: [:host, :port, :password, :db, :reconnect, :max_queue, :behaviour]
+
+  def fetch_env do
+    uri_config = Application.get_env(:exredis, :url)
+      |> parse
+      |> Map.from_struct
+      |> filter_nils
+    application_config = settings
+      |> Enum.reduce(%{}, fn (key, config) -> config |> load_config_key(key) end)
+      |> filter_nils
+    config = @default_config
+      |> Map.merge(uri_config)
+      |> Map.merge(application_config)
+    struct(Config, config)
+  end
+
+  def parse(nil), do: %Config{}
   def parse(connection_string) do
     uri = URI.parse(connection_string)
 
@@ -37,4 +52,13 @@ defmodule Exredis.Config do
     auth |> String.split(":") |> Enum.at(1)
   end
 
+  defp load_config_key(config, key) do
+    Dict.put(config, key, Application.get_env(:exredis, key))
+  end
+
+  defp filter_nils(map) do
+    map
+      |> Enum.filter(fn {_, v} -> v != nil end)
+      |> Enum.into(%{})
+  end
 end
