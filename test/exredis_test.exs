@@ -106,4 +106,9 @@ defmodule ExredisTest do
     status = E.query_pipe(client, query)
     assert status == ["OK", "1", "2"]
   end
+
+  test "explicit timeout", ctx do
+    {reason, _} = catch_exit(ctx[:c] |> E.query ["INFO"], 0)
+    assert reason == :timeout
+  end
 end

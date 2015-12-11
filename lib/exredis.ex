@@ -110,6 +110,19 @@ defmodule Exredis do
     client |> :eredis.q(command) |> elem(1)
 
   @doc """
+
+  Performs a query with the given arguments on the connected `client`.
+
+  * `query(client, ["SET", "foo", "bar"], 100)`
+
+  See all the available commands in the [official Redis
+  documentation](http://redis.io/commands).
+  """
+  @spec query(pid, list, Integer) :: any
+  def query(client, command, timeout) when is_pid(client) and is_list(command) and is_integer(timeout), do:
+    client |> :eredis.q(command, timeout) |> elem(1)
+
+  @doc """
   Performs a pipeline query, executing the list of commands.
 
       query_pipe(client, [["SET", :a, "1"],
