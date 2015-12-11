@@ -106,7 +106,7 @@ defmodule Exredis do
   documentation](http://redis.io/commands).
   """
   @spec query(pid, list) :: any
-  def query(client, command) when is_pid(client) and is_list(command), do:
+  def query(client, command) when (is_pid(client) or is_atom(client)) and is_list(command), do:
     client |> :eredis.q(command) |> elem(1)
 
   @doc """
@@ -130,6 +130,6 @@ defmodule Exredis do
                           ["LPUSH", :b, "2"]])
   """
   @spec query_pipe(pid, [list]) :: any
-  def query_pipe(client, command) when is_pid(client) and is_list(command), do:
+  def query_pipe(client, command) when (is_pid(client) or is_atom(client)) and is_list(command), do:
     client |> :eredis.qp(command) |> Enum.map(&elem(&1, 1))
 end
