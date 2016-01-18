@@ -37,7 +37,7 @@ defmodule Exredis.Sub do
       Exception.format_stacktrace
 
     start_link(host, port, password, reconnect, max_queue, behaviour)
-    |> elem 1
+    |> elem(1)
   end
   @doc false
   @spec start :: pid
@@ -48,7 +48,7 @@ defmodule Exredis.Sub do
     config = Exredis.Config.fetch_env
 
     start_link(config.host, config.port, config.password, config.reconnect, config.max_queue, config.behaviour)
-    |> elem 1    
+    |> elem(1)
   end
 
   @doc """

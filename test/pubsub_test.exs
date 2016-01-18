@@ -29,24 +29,24 @@ defmodule PubsubTest do
     {:ok, client} = E.start_link
     pid = Kernel.self
 
-    client_sub |> S.subscribe "foo", fn(msg) ->
+    client_sub |> S.subscribe("foo", fn(msg) ->
       send(pid, msg)
-    end
+    end)
 
     receive do
       msg ->
-        assert (msg |> elem 0) == :subscribed
-        assert (msg |> elem 1) == "foo"
+        assert (msg |> elem(0)) == :subscribed
+        assert (msg |> elem(1)) == "foo"
 
     end
 
-    client |> R.publish "foo", "Hello World!"
+    client |> R.publish("foo", "Hello World!")
 
     receive do
       msg ->
-        assert (msg |> elem 0) == :message
-        assert (msg |> elem 1) == "foo"
-        assert (msg |> elem 2) == "Hello World!"
+        assert (msg |> elem(0)) == :message
+        assert (msg |> elem(1)) == "foo"
+        assert (msg |> elem(2)) == "Hello World!"
 
     end
   end
@@ -57,29 +57,29 @@ defmodule PubsubTest do
     {:ok, client} = E.start_link
     pid = Kernel.self
 
-    client_sub |> S.subscribe ["foo", "bar"], fn(msg) ->
+    client_sub |> S.subscribe(["foo", "bar"], fn(msg) ->
       send(pid, msg)
+    end)
+
+    receive do
+      msg ->
+        assert (msg |> elem(0)) == :subscribed
+        assert (msg |> elem(1)) == "foo"
     end
 
     receive do
       msg ->
-        assert (msg |> elem 0) == :subscribed
-        assert (msg |> elem 1) == "foo"
+        assert (msg |> elem(0)) == :subscribed
+        assert (msg |> elem(1)) == "bar"
     end
+
+    client |> R.publish("foo", "Hello World!")
 
     receive do
       msg ->
-        assert (msg |> elem 0) == :subscribed
-        assert (msg |> elem 1) == "bar"
-    end
-
-    client |> R.publish "foo", "Hello World!"
-
-    receive do
-      msg ->
-        assert (msg |> elem 0) == :message
-        assert (msg |> elem 1) == "foo"
-        assert (msg |> elem 2) == "Hello World!"
+        assert (msg |> elem(0)) == :message
+        assert (msg |> elem(1)) == "foo"
+        assert (msg |> elem(2)) == "Hello World!"
 
     end
   end
@@ -90,25 +90,25 @@ defmodule PubsubTest do
     {:ok, client} = E.start_link
     pid = Kernel.self
 
-    client_sub |> S.psubscribe "bar_*", fn(msg) ->
+    client_sub |> S.psubscribe("bar_*", fn(msg) ->
       send(pid, msg)
-    end
+    end)
 
     receive do
       msg ->
-        assert (msg |> elem 0) == :subscribed
-        assert (msg |> elem 1) == "bar_*"
+        assert (msg |> elem(0)) == :subscribed
+        assert (msg |> elem(1)) == "bar_*"
 
     end
 
-    client |> R.publish "bar_test", "Hello World!"
+    client |> R.publish("bar_test", "Hello World!")
 
     receive do
       msg ->
-        assert (msg |> elem 0) == :pmessage
-        assert (msg |> elem 1) == "bar_*"
-        assert (msg |> elem 2) == "bar_test"
-        assert (msg |> elem 3) == "Hello World!"
+        assert (msg |> elem(0)) == :pmessage
+        assert (msg |> elem(1)) == "bar_*"
+        assert (msg |> elem(2)) == "bar_test"
+        assert (msg |> elem(3)) == "Hello World!"
 
     end
   end

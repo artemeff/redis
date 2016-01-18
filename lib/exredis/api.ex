@@ -193,7 +193,7 @@ defmodule Exredis.Api do
   end
 
   defp multi_int_reply(reply), do:
-    reply |> Enum.map &int_reply/1
+    reply |> Enum.map(&int_reply/1)
 
   defp sts_reply("OK"), do:
     :ok

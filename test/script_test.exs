@@ -20,9 +20,9 @@ defmodule ScriptTest do
     {:ok, client} = E.start_link
 
     # clean up database and set test value
-    client |> E.query ["FLUSHALL"]
-    client |> E.query ["SET", "key1", "value1"]
-    client |> E.query ["SET", "key2", "value2"]
+    client |> E.query(["FLUSHALL"])
+    client |> E.query(["SET", "key1", "value1"])
+    client |> E.query(["SET", "key2", "value2"])
 
     { :ok, [c: client] }
   end
