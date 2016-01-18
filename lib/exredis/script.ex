@@ -11,7 +11,7 @@ defmodule Exredis.Script do
       def unquote(name)(client, keys \\ [], argv \\ []) do
         query_args = [length(keys)] ++ keys ++ argv
         case Exredis.query client, ["EVALSHA", unquote(script_sha)] ++ query_args do
-          <<"NOSCRIPT", _ :: binary>> -> 
+          <<"NOSCRIPT", _ :: binary>> ->
             load_script client, unquote(script)
             unquote(name)(client, keys, argv)
           reply -> reply
@@ -24,7 +24,7 @@ defmodule Exredis.Script do
     case Exredis.query client, ["SCRIPT", "LOAD", script] do
       <<"ERR", error :: binary>> ->
         throw error
-      reply -> 
+      reply ->
         reply
     end
   end

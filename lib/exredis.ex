@@ -28,7 +28,7 @@ defmodule Exredis do
       Exception.format_stacktrace
 
     start_link(host, port, database, password, reconnect_sleep)
-    |> elem 1
+    |> elem(1)
   end
 
 
@@ -40,7 +40,7 @@ defmodule Exredis do
 
     config = Exredis.Config.fetch_env
     start_link(config.host, config.port, config.db, config.password, config.reconnect)
-    |> elem 1
+    |> elem(1)
   end
 
   @doc """

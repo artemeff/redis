@@ -4,8 +4,8 @@ defmodule Pi do
   import Exredis
 
   # set/get
-  def get, do: start_link |> elem(1) |> query ["GET", "Pi"]
-  def set, do: start_link |> elem(1) |> query ["SET", "Pi", "3.14"]
+  def get, do: start_link |> elem(1) |> query(["GET", "Pi"])
+  def set, do: start_link |> elem(1) |> query(["SET", "Pi", "3.14"])
 end
 
 defmodule ExredisTest do
@@ -16,14 +16,14 @@ defmodule ExredisTest do
     {:ok, client} = E.start_link
 
     # clean up database and set test value
-    client |> E.query ["FLUSHALL"]
-    client |> E.query ["SET", "key", "value"]
+    client |> E.query(["FLUSHALL"])
+    client |> E.query(["SET", "key", "value"])
 
     { :ok, [c: client] }
   end
 
   test "mixin Pi.get", ctx do
-    ctx[:c] |> E.query ["SET", "Pi", "3.14"]
+    ctx[:c] |> E.query(["SET", "Pi", "3.14"])
 
     assert Pi.get == "3.14"
   end
@@ -31,7 +31,7 @@ defmodule ExredisTest do
   test "mixin Pi.set", ctx do
     Pi.set
 
-    assert (ctx[:c] |> E.query ["GET", "Pi"]) == "3.14"
+    assert (ctx[:c] |> E.query(["GET", "Pi"])) == "3.14"
   end
 
   test "connect" do
@@ -53,29 +53,29 @@ defmodule ExredisTest do
   end
 
   test "set returns OK", ctx do
-    assert (ctx[:c] |> E.query ["SET", "foo", "bar"]) == "OK"
+    assert (ctx[:c] |> E.query(["SET", "foo", "bar"])) == "OK"
   end
 
   test "set works", ctx do
-    ctx[:c] |> E.query ["SET", "foo", "bar"]
+    ctx[:c] |> E.query(["SET", "foo", "bar"])
 
-    assert (ctx[:c] |> E.query ["GET", "foo"]) == "bar"
+    assert (ctx[:c] |> E.query(["GET", "foo"])) == "bar"
   end
 
   test "get", ctx do
-    assert (ctx[:c] |> E.query ["GET", "key"]) == "value"
+    assert (ctx[:c] |> E.query(["GET", "key"])) == "value"
   end
 
   test "mset returns OK", ctx do
     values = ["key1", "value1", "key2", "value2"]
 
-    assert (ctx[:c] |> E.query ["MSET" | values]) == "OK"
+    assert (ctx[:c] |> E.query(["MSET" | values])) == "OK"
   end
 
   test "mset works", ctx do
-    ctx[:c] |> E.query ["MSET" | ["key1", "value1", "key2", "value2"]]
+    ctx[:c] |> E.query(["MSET" | ["key1", "value1", "key2", "value2"]])
 
-    values = ctx[:c] |> E.query ["MGET" | ["key1", "key2"]]
+    values = ctx[:c] |> E.query(["MGET" | ["key1", "key2"]])
 
     assert values == ["value1", "value2"]
   end
@@ -108,7 +108,7 @@ defmodule ExredisTest do
   end
 
   test "explicit timeout", ctx do
-    {reason, _} = catch_exit(ctx[:c] |> E.query ["INFO"], 0)
+    {reason, _} = catch_exit(ctx[:c] |> E.query(["INFO"], 0))
     assert reason == :timeout
   end
 end
