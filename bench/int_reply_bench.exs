@@ -2,7 +2,7 @@ defmodule IntReplyBench do
   use Benchfella
 
   setup_all do
-    {:ok, Exredis.start}
+    {:ok, Exredis.start_using_connection_string}
   end
 
   bench "int_reply", [c: bench_context] do
