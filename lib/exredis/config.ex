@@ -23,10 +23,23 @@ defmodule Exredis.Config do
     application_config = settings
       |> Enum.reduce(%{}, fn (key, config) -> config |> load_config_key(key) end)
       |> filter_nils
+
     config = @default_config
       |> Map.merge(uri_config)
       |> Map.merge(application_config)
+      |> parse_port
     struct(Config, config)
+  end
+  defp parse_port(m) do
+    n = case is_integer(m.port) do
+      true -> 
+        m.port 
+      _ -> 
+        {i, _} = Integer.parse(m.port)
+        i
+    end
+    %{m | :port=>n}
+
   end
 
   def parse(nil), do: %Config{}
@@ -40,7 +53,6 @@ defmodule Exredis.Config do
       db:       uri.path |> parse_db
     }
   end
-
   defp parse_db(nil), do: 0
   defp parse_db("/"), do: 0
   defp parse_db(path) do
@@ -53,7 +65,13 @@ defmodule Exredis.Config do
   end
 
   defp load_config_key(config, key) do
-    Dict.put(config, key, Application.get_env(:exredis, key))
+    r = Application.get_env(:exredis, key)
+    value = case r do
+      {:system, name} -> System.get_env(name)
+      _               -> r
+    end
+
+    Dict.put(config, key, value)
   end
 
   defp filter_nils(map) do
