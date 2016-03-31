@@ -11,7 +11,7 @@
 Add this to the dependencies:
 
 ```elixir
-{:exredis, ">= 0.2.2"}
+{:exredis, ">= 0.2.4"}
 ```
 
 ---
