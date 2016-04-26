@@ -82,11 +82,12 @@ defmodule Exredis.Sub do
     :eredis_sub.stop(client)
 
   @doc """
-  Subscribe to a channel
+  Subscribe to a channel or channels
 
   * `subscribe(client, "some_channel", fn(msg) -> ... end)`
+  * `subscribe(client, ["some_channel", "other_channel"], fn(msg) -> ... end)`
   """
-  @spec subscribe(pid, binary, term) :: any
+  @spec subscribe(pid, binary | [binary], term) :: any
   def subscribe(client, channel, term) do
     spawn_link fn ->
       :eredis_sub.controlling_process client
@@ -96,11 +97,12 @@ defmodule Exredis.Sub do
   end
 
   @doc """
-  Subscribe to a channel by pattern
+  Subscribe to a channel or channels by pattern
 
   * `psubscribe(client, "some_channel_*", fn(msg) -> ... end)`
+  * `psubscribe(client, ["some_channel_*", "other_channel_*"], fn(msg) -> ... end)`
   """
-  @spec psubscribe(pid, binary, term) :: any
+  @spec psubscribe(pid, binary | [binary], term) :: any
   def psubscribe(client, channel, term) do
     spawn_link fn ->
       :eredis_sub.controlling_process client
