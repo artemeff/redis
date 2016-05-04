@@ -79,6 +79,24 @@ client |> Api.get
 # => "value"
 ```
 
+__Using Exredis.Api with multiple keys__
+
+``` elixir
+{:ok, client} = Exredis.start_link
+
+client |> Exredis.Api.sadd("set1", "bar")
+# => "1"
+
+client |> Exredis.Api.sadd("set2", ["bar", "foo"])
+# => "2"
+
+client |> Exredis.Api.sdiff(["set2", "set1"])
+# => ["foo"]
+
+client |> Exredis.Api.sdiffstore("dest", ["set2", "set1"])
+# => "1"
+```
+
 __Connect to the Redis server__
 
 ```elixir
