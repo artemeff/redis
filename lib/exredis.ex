@@ -44,6 +44,19 @@ defmodule Exredis do
   end
 
   @doc """
+  Connects to the Redis server, Erlang way:
+
+  * `start_link`
+
+  Returns a tuple `{:ok, pid}`.
+  """
+  @spec start_link :: start_link
+  def start_link([]) do
+    config = Exredis.Config.fetch_env
+    :eredis.start_link(String.to_char_list(config.host), config.port, config.db, String.to_char_list(config.password), config.reconnect)
+  end
+
+  @doc """
   Allows poolboy to connect to this by passing a list of args
   """
   def start_link(system_args) when is_list(system_args) do
