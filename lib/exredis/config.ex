@@ -44,7 +44,11 @@ defmodule Exredis.Config do
 
   def parse(nil), do: %Config{}
   def parse(connection_string) do
-    uri = URI.parse(connection_string)
+    value = case connection_string do
+      {:system, name} -> System.get_env(name)
+      _               -> connection_string
+    end
+    uri = URI.parse(value)
 
     %Config{
       host:     uri.host,
