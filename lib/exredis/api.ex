@@ -28,12 +28,13 @@ defmodule Exredis.Api do
   import Exredis.Api.Helper
 
   def defaultclient do
-    pid = Process.whereis(:exredis_hapi_default_client)
-    if !pid do
-      {:ok, pid} = Exredis.start_link
-      Process.register pid, :exredis_hapi_default_client
+    case Process.whereis(:exredis_hapi_default_client) do
+      nil ->
+        {:ok, pid} = Exredis.start_link
+        Process.register(pid, :exredis_hapi_default_client)
+        pid
+      pid -> pid
     end
-    pid
   end
 
   defredis :append, [:key, :value], &int_reply/1
