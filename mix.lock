@@ -1,6 +1,6 @@
-%{"benchfella": {:hex, :benchfella, "0.3.1"},
-  "earmark": {:hex, :earmark, "0.2.1"},
-  "eredis": {:hex, :eredis, "1.0.8"},
-  "ex_doc": {:hex, :ex_doc, "0.11.3"},
+%{"benchfella": {:hex, :benchfella, "0.3.1", "3728b082725f27c46502c4609f78b8db01d4739932ebfc59f350b7a2b47d394d", [:mix], []},
+  "earmark": {:hex, :earmark, "1.0.1", "2c2cd903bfdc3de3f189bd9a8d4569a075b88a8981ded9a0d95672f6e2b63141", [:mix], []},
+  "eredis": {:hex, :eredis, "1.0.8", "ab4fda1c4ba7fbe6c19c26c249dc13da916d762502c4b4fa2df401a8d51c5364", [:rebar], []},
+  "ex_doc": {:hex, :ex_doc, "0.13.0", "aa2f8fe4c6136a2f7cfc0a7e06805f82530e91df00e2bff4b4362002b43ada65", [:mix], [{:earmark, "~> 1.0", [hex: :earmark, optional: false]}]},
   "inch_ex": {:hex, :inch_ex, "0.3.3"},
   "poison": {:hex, :poison, "1.4.0"}}
