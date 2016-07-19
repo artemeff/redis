@@ -107,6 +107,14 @@ defmodule ExredisTest do
     assert status == ["OK", "1", "2"]
   end
 
+  test "pipelining with explicit timeout" do
+    query  = [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]]
+    {:ok, client} = E.start_link
+
+    status = E.query_pipe(client, query, 10)
+    assert status == ["OK", "1", "2"]
+  end
+
   test "explicit timeout", ctx do
     {reason, _} = catch_exit(ctx[:c] |> E.query(["INFO"], 0))
     assert reason == :timeout
