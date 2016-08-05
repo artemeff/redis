@@ -109,6 +109,17 @@ defmodule Exredis do
   end
 
   @doc """
+  Retrieves the Redis client registered with the given name:
+
+  `client name`
+
+  Returns the `pid` of the client.
+  """
+  @spec client(pid) :: pid
+  def client(name), do:
+    Exredis.Connection.client(name)
+
+  @doc """
   Disconnects from the Redis server:
 
   `stop client`
