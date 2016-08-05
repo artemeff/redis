@@ -223,6 +223,30 @@ end
 client |> MyScripts.lua_echo(["mykey"], ["foo"])
 # => "foo"
 ```
+
+__Supervised connections__
+
+If you want your connection to be supervised and automatically restarted when it crashes, you can use `Exredis.Connection` to register a supervised worker in the application bootstrap:
+
+```elixir
+worker(Exredis.Connection, [:myredis_proc, :myredis_conn, "redis://example.com:6379/0"])
+```
+
+You can then retrieve the registered client this way:
+
+```elixir
+import Exredis
+
+:my_redis_conn |> client |> query ["SET", "FOO", "BAR"]
+```
+
+`Exredis.Connection` also allows you to register multiple connections:
+
+```elixir
+worker(Exredis.Connection, [:myredis_proc1, :myredis_conn1, "redis://example.com:6379/0"], id: :my_worker1)
+worker(Exredis.Connection, [:myredis_proc2, :myredis_conn2, "redis://example.io:6379/0"], id: :my_worker2)
+```
+
 ---
 
 ### Contributing
