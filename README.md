@@ -43,6 +43,8 @@ config :exredis,
 
 __As mixin__
 
+*Warning: this example should not be used in production. It spawns new connection to redis on each call, and these connections will not be closed.*
+
 ```elixir
 defmodule Pi do
   import Exredis
@@ -222,6 +224,33 @@ end
 
 client |> MyScripts.lua_echo(["mykey"], ["foo"])
 # => "foo"
+```
+
+__Supervised example__
+
+```elixir
+defmodule SomeApp do
+  use Application
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    children = [
+      worker(SomeApp.RedisRepo, [:myredis, "redis://localhost:6379/0"]),
+    ]
+
+    opts = [strategy: :one_for_one, name: SomeApp.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+
+defmodule SomeApp.RedisRepo do
+  def start_link(name, uri) do
+    client = Exredis.start_using_connection_string(uri)
+    true = Process.register(client, name)
+    {:ok, client}
+  end
+end
+
 ```
 ---
 
