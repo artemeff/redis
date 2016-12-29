@@ -20,7 +20,7 @@ defmodule Exredis.Config do
       |> parse
       |> Map.from_struct
       |> filter_nils
-    application_config = settings
+    application_config = settings()
       |> Enum.reduce(%{}, fn (key, config) -> config |> load_config_key(key) end)
       |> filter_nils
 
@@ -32,9 +32,9 @@ defmodule Exredis.Config do
   end
   defp parse_port(m) do
     n = case is_integer(m.port) do
-      true -> 
-        m.port 
-      _ -> 
+      true ->
+        m.port
+      _ ->
         {i, _} = Integer.parse(m.port)
         i
     end
@@ -75,7 +75,7 @@ defmodule Exredis.Config do
       _               -> r
     end
 
-    Dict.put(config, key, value)
+    Map.put(config, key, value)
   end
 
   defp filter_nils(map) do
