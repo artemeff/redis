@@ -14,7 +14,7 @@ defmodule Exredis.Api.Helper do
       end
 
       def unquote(cmd_name)(unquote_splicing(margs)) do
-        unquote(cmd_name)(defaultclient, unquote_splicing(margs))
+        unquote(cmd_name)(defaultclient(), unquote_splicing(margs))
       end
     end
   end

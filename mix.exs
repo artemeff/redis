@@ -10,8 +10,8 @@ defmodule Exredis.Mixfile do
      name: "exredis",
      source_url: "https://github.com/artemeff/exredis",
      homepage_url: "https://hexdocs.pm/exredis",
-     deps: deps,
-     package: package,
+     deps: deps(),
+     package: package(),
      description: "Redis client for Elixir"]
   end
 
