@@ -14,6 +14,18 @@ Add this to the dependencies:
 {:exredis, ">= 0.2.4"}
 ```
 
+Add `:exredis` to `applications` list:
+```
+def application do
+  [
+    applications: [
+      :exredis
+    ],
+    mod: {MyApp, []},
+  ]
+end
+```
+
 ---
 
 ### Configuration
