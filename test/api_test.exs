@@ -353,4 +353,16 @@ defmodule ApiTest do
     assert (c[:c] |> R.get("key")) == :undefined
   end
 
+  describe "defaultclient/0" do
+    test "concurrently registering :exredis_hapi_default_client does not fail" do
+      with [pid] <- [Task.async(&R.defaultclient/0),
+                     Task.async(&R.defaultclient/0),
+                     Task.async(&R.defaultclient/0),
+                     Task.async(&R.defaultclient/0),
+                     Task.async(&R.defaultclient/0)] |> Enum.map(&Task.await/1)
+                                                     |> Enum.uniq do
+        assert is_pid(pid)
+      end
+    end
+  end
 end

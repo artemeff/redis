@@ -30,9 +30,14 @@ defmodule Exredis.Api do
   def defaultclient do
     case Process.whereis(:exredis_hapi_default_client) do
       nil ->
-        {:ok, pid} = Exredis.start_link
-        Process.register(pid, :exredis_hapi_default_client)
-        pid
+        try do
+          {:ok, pid} = Exredis.start_link
+          Process.register(pid, :exredis_hapi_default_client)
+
+          pid
+        rescue
+          ArgumentError -> Process.whereis(:exredis_hapi_default_client)
+        end
       pid -> pid
     end
   end
