@@ -19,13 +19,13 @@ defmodule Exredis.Sub do
   def start_link(host, port, password \\ "",
             reconnect \\ :no_reconnect, max_queue \\ :infinity,
             behaviour \\ :drop), do:
-    :eredis_sub.start_link(String.to_char_list(host), port, String.to_char_list(password), reconnect, max_queue, behaviour)
+    :eredis_sub.start_link(String.to_charlist(host), port, String.to_charlist(password), reconnect, max_queue, behaviour)
 
 
   def start_link do
     config = Exredis.Config.fetch_env
 
-    :eredis_sub.start_link(String.to_char_list(config.host), config.port, String.to_char_list(config.password), config.reconnect, config.max_queue, config.behaviour)
+    :eredis_sub.start_link(String.to_charlist(config.host), config.port, String.to_charlist(config.password), config.reconnect, config.max_queue, config.behaviour)
   end
 
   @doc false
