@@ -4,8 +4,8 @@ defmodule Pi do
   import Exredis
 
   # set/get
-  def get, do: start_link |> elem(1) |> query(["GET", "Pi"])
-  def set, do: start_link |> elem(1) |> query(["SET", "Pi", "3.14"])
+  def get, do: start_link() |> elem(1) |> query(["GET", "Pi"])
+  def set, do: start_link() |> elem(1) |> query(["SET", "Pi", "3.14"])
 end
 
 defmodule ExredisTest do

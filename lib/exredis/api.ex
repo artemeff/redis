@@ -2,7 +2,7 @@ defmodule Exredis.Api.Helper do
   defmacro defredis(cmd, args, fun \\ nil) do
     margs = Enum.map args, fn(x) -> {x, [], ExRedis.Api.Helper} end
     cmd = if is_list(cmd), do: cmd, else: [cmd]
-    cmd_name = Enum.map(cmd, fn(x) -> Atom.to_char_list(x) end)
+    cmd_name = Enum.map(cmd, fn(x) -> Atom.to_charlist(x) end)
       |> Enum.join("_") |> String.to_atom
     method = Enum.map cmd, fn(x) -> Atom.to_string(x) |> String.upcase end
     quote do

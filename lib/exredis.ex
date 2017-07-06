@@ -53,7 +53,7 @@ defmodule Exredis do
   @spec start_link :: start_link
   def start_link([]) do
     config = Exredis.Config.fetch_env
-    :eredis.start_link(String.to_char_list(config.host), config.port, config.db, String.to_char_list(config.password), config.reconnect)
+    :eredis.start_link(String.to_charlist(config.host), config.port, config.db, String.to_charlist(config.password), config.reconnect)
   end
 
   @doc """
@@ -65,7 +65,7 @@ defmodule Exredis do
   """
   @spec start_link :: start_link
   def start_link(%Exredis.Config.Config{} = config) do
-    :eredis.start_link(String.to_char_list(config.host), config.port, config.db, String.to_char_list(config.password), config.reconnect)
+    :eredis.start_link(String.to_charlist(config.host), config.port, config.db, String.to_charlist(config.password), config.reconnect)
   end
 
   @doc """
@@ -74,7 +74,7 @@ defmodule Exredis do
   def start_link(system_args) when is_list(system_args) do
     system_args = Enum.map(system_args, fn{k,v} ->
       if is_binary(v) do
-        {k, String.to_char_list(v)}
+        {k, String.to_charlist(v)}
       else
         {k,v}
       end
@@ -92,7 +92,7 @@ defmodule Exredis do
   @spec start_link(binary, integer, integer, binary, reconnect_sleep) :: start_link
   def start_link(host, port, database \\ 0,
                  password \\ "", reconnect_sleep \\ :no_reconnect) when is_binary(host) do
-    :eredis.start_link(String.to_char_list(host), port, database, String.to_char_list(password), reconnect_sleep)
+    :eredis.start_link(String.to_charlist(host), port, database, String.to_charlist(password), reconnect_sleep)
   end
 
   @doc """
@@ -105,7 +105,7 @@ defmodule Exredis do
   @spec start_link :: start_link
   def start_link do
     config = Exredis.Config.fetch_env
-    :eredis.start_link(String.to_char_list(config.host), config.port, config.db, String.to_char_list(config.password), config.reconnect)
+    :eredis.start_link(String.to_charlist(config.host), config.port, config.db, String.to_charlist(config.password), config.reconnect)
   end
 
   @doc """
