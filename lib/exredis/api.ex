@@ -70,7 +70,7 @@ defmodule Exredis.Api do
   defredis :hexists, [:key, :field], &int_reply/1
   defredis :hget, [:key, :field]
   defredis :hgetall, [:key], fn x ->
-    Enum.chunk(x, 2)
+    Enum.chunk_every(x, 2)
       |> Enum.map(fn [a, b] -> {a, b} end)
       |> Enum.into(Map.new)
   end
