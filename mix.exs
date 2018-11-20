@@ -22,8 +22,8 @@ defmodule Exredis.Mixfile do
   defp deps do
     [{:eredis,  ">= 1.0.8"},
      {:benchfella, "~> 0.3.0", only: :dev},
-     {:earmark, "~> 1.2.0", only: :dev},
-     {:ex_doc, "~> 0.16.0", only: :dev}]
+     {:earmark, "~> 1.2", only: :dev},
+     {:ex_doc, "~> 0.19", only: :dev}]
   end
 
   defp package do
