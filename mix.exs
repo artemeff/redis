@@ -1,12 +1,10 @@
 defmodule Exredis.Mixfile do
   use Mix.Project
 
-  @version "0.2.6"
-
   def project do
     [app: :exredis,
-     version: @version,
-     elixir: "~> 1.0",
+     version: "0.3.0",
+     elixir: "~> 1.5",
      name: "exredis",
      source_url: "https://github.com/artemeff/exredis",
      homepage_url: "https://hexdocs.pm/exredis",
