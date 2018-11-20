@@ -3,6 +3,9 @@ language: elixir
 dist: trusty
 sudo: false
 
+services:
+  - redis-server
+
 matrix:
   include:
   - elixir: 1.7.4
