@@ -1,8 +1,15 @@
-### exredis [![Build Status](https://img.shields.io/travis/artemeff/exredis.svg)](https://travis-ci.org/artemeff/exredis) [![Hex.pm](https://img.shields.io/hexpm/v/exredis.svg)](https://hex.pm/packages/exredis)
+### Redis [![Build Status](https://img.shields.io/travis/artemeff/redis.svg)](https://travis-ci.org/artemeff/redis) [![Hex.pm](https://img.shields.io/hexpm/v/redis.svg)](https://hex.pm/packages/redis)
 
 ---
 
-[Redis](http://redis.io) client for Elixir.
+[Redis](http://redis.io) commands for Elixir. If you are looking for exredis, please check out [exredis](https://github.com/artemeff/exredis/tree/exredis) branch.
+
+---
+
+* [Installation](#installation)
+* [Usage](#usage)
+* [API reference](http://hexdocs.pm/redis/)
+* [Contributing](#contributing)
 
 ---
 
@@ -11,247 +18,71 @@
 Add this to the dependencies:
 
 ```elixir
-{:exredis, ">= 0.2.4"}
+{:redis, "~> 0.1"}
 ```
 
 ---
 
-### Configuration
+### Usage
 
-In your applications config.exs file you need to add new section for customizing redis connection.
+Redis commands have a few simple types: enums, commands and primitive. Types can be required and optional, multiple and variadic, can be composite.
 
-```elixir
-config :exredis,
-  host: "127.0.0.1",
-  port: 6379,
-  password: "",
-  db: 0,
-  reconnect: :no_reconnect,
-  max_queue: :infinity
-```
+Situation with required and optional types is simple: required types are just arguments in function and optional values passed with the last argument — `opts`. opts is just a list, opts described in typespecs for each command.
 
-or
+Multiple arguments are arguments that contain one or more values. Multiple arguments can be optional.
+
+Enum types in Redis is just a enumerable (usually), take a look at `xx | nx` enum:
 
 ```elixir
-config :exredis,
-  url: "redis://user:password@host:1234/10",
-  reconnect: :no_reconnect,
-  max_queue: :infinity
+iex> Redis.set("key", "value", [:xx])
+["SET", [" ", "key"], [" ", "value"], [], [" ", "XX"]]
+
+iex> Redis.set("key", "value", [:nx])
+["SET", [" ", "key"], [" ", "value"], [], [" ", "NX"]]
 ```
 
-### Usage ([web docs](http://hexdocs.pm/exredis/))
-
-__As mixin__
-
-*Warning: this example should not be used in production. It spawns new connection to redis on each call, and these connections will not be closed.*
+Commands are prefixed types, commands can wrap primitive types, enums and composite types:
 
 ```elixir
-defmodule Pi do
-  import Exredis
+# command with enum inside
+iex> Redis.client_kill(type: :master)
+["CLIENT KILL", [], [], [" ", ["TYPE", " ", "master"]], [], []]
 
-  def get, do: start_link |> elem(1) |> query ["GET", "Pi"]
-  def set, do: start_link |> elem(1) |> query ["SET", "Pi", "3.14"]
-end
+# command with primitive type inside
+iex> Redis.client_kill(id: "identity")
+["CLIENT KILL", [], [" ", ["ID", " ", "identity"]], [], [], []]
 
-Pi.set
-# => "OK"
-
-Pi.get
-# => "3.14"
+# command with composite type inside, inner type of get is: {String.t, integer()}
+iex> Redis.bitfield("key", get: {"type", "offset"})
+["BITFIELD", [" ", "key"], [" ", ["GET", " ", ["type", " ", "offset"]]], [], [], []]
 ```
+
+You can see the usage for every Redis command in IEx:
 
 ```elixir
-defmodule Api do
-  import Exredis.Api
+iex> h Redis.set
 
-  def set(client), do:
-    client |> set "key", "value"
+  def set(key, value, opts \\ [])
 
-  def get(client), do:
-    client |> get "key"
+  @spec set(
+          key :: key(),
+          value :: String.t(),
+          opts :: [
+            {:expiration, {:ex, :integer} | {:px, :integer}}
+            | (:nx | :xx)
+            | {:condition, :nx | :xx}
+          ]
+        ) :: iolist()
 
-end
+since: 1.0.0
 
-{:ok, client} = Exredis.start_link
+Set the string value of a key
 
-client |> Api.set
-# => "OK"
-
-client |> Api.get
-# => "value"
+Group: string.
 ```
 
-__Using Exredis.Api with multiple keys__
+Or head to the [documentation on hexdocs](http://hexdocs.pm/redis/).
 
-``` elixir
-{:ok, client} = Exredis.start_link
-
-client |> Exredis.Api.sadd("set1", "bar")
-# => "1"
-
-client |> Exredis.Api.sadd("set2", ["bar", "foo"])
-# => "2"
-
-client |> Exredis.Api.sdiff(["set2", "set1"])
-# => ["foo"]
-
-client |> Exredis.Api.sdiffstore("dest", ["set2", "set1"])
-# => "1"
-```
-
-__Connect to the Redis server__
-
-```elixir
-{:ok, client} = Exredis.start_link
-# or
-client = Exredis.start_using_connection_string("redis://127.0.0.1:6379")
-```
-
-__Disconnect from the server__
-
-```elixir
-client |> Exredis.stop
-```
-
-__Set & Get__
-
-```elixir
-# set
-client |> Exredis.query ["SET", "FOO", "BAR"]
-
-# get
-client |> Exredis.query ["GET", "FOO"]
-# => "BAR"
-```
-
-__Mset & Mget__
-
-```elixir
-# mset
-client |> Exredis.query ["MSET" | ["key1", "value1", "key2", "value2", "key3", "value3"]]
-
-# mget
-client |> Exredis.query ["MGET" | ["key1", "key2", "key3"]]
-# => ["value1", "value2", "value3"]
-```
-
-__Transactions__
-
-```elixir
-# start
-client |> Exredis.query ["MULTI"]
-
-# exec
-client |> Exredis.query ["SET", "foo", "bar"]
-client |> Exredis.query ["SET", "bar", "baz"]
-
-# commit
-client |> Exredis.query ["EXEC"]
-```
-
-__Pipelining__
-
-```elixir
-client |> Exredis.query_pipe [["SET", :a, "1"], ["LPUSH", :b, "3"], ["LPUSH", :b, "2"]]
-```
-
-__Pub/sub__
-
-```elixir
-{:ok, client_sub} = Exredis.Sub.start_link
-{:ok, client} = Exredis.start_link
-pid = Kernel.self
-
-client_sub |> Exredis.Sub.subscribe "foo", fn(msg) ->
-  send(pid, msg)
-end
-
-receive do
-  msg ->
-    IO.inspect msg
-    # => {:subscribed, "foo", #PID<0.85.0>}
-end
-
-client |> Exredis.Api.publish "foo", "Hello World!"
-
-receive do
-  msg ->
-    IO.inspect msg
-    # => {:message, "foo", "Hello World!", #PID<0.85.0>}
-end
-```
-
-__Pub/sub by a pattern__
-
-```elixir
-{:ok, client_sub} = Exredis.Sub.start_link
-{:ok, client} = Exredis.start_link
-pid = Kernel.self
-
-client_sub |> Exredis.Sub.psubscribe "bar_*", fn(msg) ->
-  send(pid, msg)
-end
-
-receive do
-  msg ->
-    IO.inspect msg
-    # => {:subscribed, "bar_*", #PID<0.104.0>}
-end
-
-client |> Exredis.Api.publish "bar_test", "Hello World!"
-
-receive do
-  msg ->
-    IO.inspect msg
-    # => {:pmessage, "bar_*", "bar_test", "Hello World!", #PID<0.104.0>}
-end
-```
-
-__Scripting__
-
-```elixir
-client |> Exredis.Api.script_load "return 1 + 1"
-# => "c301e0c5bc3538d2bad3fdbf2e281887e643ada4"
-client |> Exredis.Api.evalsha "c301e0c5bc3538d2bad3fdbf2e281887e643ada4", 0, ["key1"], ["argv1"]
-# => "2"
-
-defmodule MyScripts do
-  import Exredis.Script
-
-  defredis_script :lua_echo, "return ARGV[1]"
-  defredis_script :huge_command, file_path: "lua_scripts/huge_command.lua"
-end
-
-client |> MyScripts.lua_echo(["mykey"], ["foo"])
-# => "foo"
-```
-
-__Supervised example__
-
-```elixir
-defmodule SomeApp do
-  use Application
-  def start(_type, _args) do
-    import Supervisor.Spec, warn: false
-
-    children = [
-      worker(SomeApp.RedisRepo, [:myredis, "redis://localhost:6379/0"]),
-    ]
-
-    opts = [strategy: :one_for_one, name: SomeApp.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
-end
-
-defmodule SomeApp.RedisRepo do
-  def start_link(name, uri) do
-    client = Exredis.start_using_connection_string(uri)
-    true = Process.register(client, name)
-    {:ok, client}
-  end
-end
-
-```
 ---
 
 ### Contributing
