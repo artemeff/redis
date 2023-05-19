@@ -4,7 +4,7 @@ defmodule Exredis do
   """
 
   @type reconnect_sleep :: :no_reconnect | integer
-  @type start_link      :: {:ok, pid} | {:error, term}
+  @type start_link :: {:ok, pid} | {:error, term}
 
   @doc """
   Connects to the Redis server using a connection string:
@@ -15,30 +15,38 @@ defmodule Exredis do
   Returns the pid of the connected client.
   """
   @spec start_using_connection_string(binary, :no_reconnect | integer) :: pid
-  def start_using_connection_string(connection_string \\ "redis://127.0.0.1:6379", reconnect_sleep \\ :no_reconnect)  do
+  def start_using_connection_string(
+        connection_string \\ "redis://127.0.0.1:6379",
+        reconnect_sleep \\ :no_reconnect
+      ) do
     config = Exredis.Config.parse(connection_string)
     start_link(config.host, config.port, config.db, config.password, reconnect_sleep) |> elem(1)
   end
 
   @doc false
   @spec start(binary, integer, integer, binary, :no_reconnect | integer) :: pid
-  def start(host, port, database \\ 0,
-            password \\ "", reconnect_sleep \\ :no_reconnect) do
-    IO.write :stderr, "warning: Exredis.start/5 is deprecated\n" <>
-      Exception.format_stacktrace
+  def start(host, port, database \\ 0, password \\ "", reconnect_sleep \\ :no_reconnect) do
+    IO.write(
+      :stderr,
+      "warning: Exredis.start/5 is deprecated\n" <>
+        Exception.format_stacktrace()
+    )
 
     start_link(host, port, database, password, reconnect_sleep)
     |> elem(1)
   end
 
-
   @doc false
   @spec start :: pid
   def start do
-    IO.write :stderr, "warning: Exredis.start/0 is deprecated\n" <>
-      Exception.format_stacktrace
+    IO.write(
+      :stderr,
+      "warning: Exredis.start/0 is deprecated\n" <>
+        Exception.format_stacktrace()
+    )
 
-    config = Exredis.Config.fetch_env
+    config = Exredis.Config.fetch_env()
+
     start_link(config.host, config.port, config.db, config.password, config.reconnect)
     |> elem(1)
   end
@@ -52,8 +60,15 @@ defmodule Exredis do
   """
   @spec start_link :: start_link
   def start_link([]) do
-    config = Exredis.Config.fetch_env
-    :eredis.start_link(String.to_charlist(config.host), config.port, config.db, String.to_charlist(config.password), config.reconnect)
+    config = Exredis.Config.fetch_env()
+
+    :eredis.start_link(
+      String.to_charlist(config.host),
+      config.port,
+      config.db,
+      String.to_charlist(config.password),
+      config.reconnect
+    )
   end
 
   @doc """
@@ -65,20 +80,29 @@ defmodule Exredis do
   """
   @spec start_link :: start_link
   def start_link(%Exredis.Config.Config{} = config) do
-    :eredis.start_link(String.to_charlist(config.host), config.port, config.db, String.to_charlist(config.password), config.reconnect)
+    :eredis.start_link([
+      {:host, String.to_charlist(config.host)},
+      {:port, config.port},
+      {:database, config.db},
+      {:password, String.to_charlist(config.password)},
+      {:reconnect_sleep, config.reconnect},
+      {:tls, [{:verify, :verify_none}]}
+    ])
   end
 
   @doc """
   Allows poolboy to connect to this by passing a list of args
   """
   def start_link(system_args) when is_list(system_args) do
-    system_args = Enum.map(system_args, fn{k,v} ->
-      if is_binary(v) do
-        {k, String.to_charlist(v)}
-      else
-        {k,v}
-      end
-    end)
+    system_args =
+      Enum.map(system_args, fn {k, v} ->
+        if is_binary(v) do
+          {k, String.to_charlist(v)}
+        else
+          {k, v}
+        end
+      end)
+
     :eredis.start_link(system_args)
   end
 
@@ -90,9 +114,16 @@ defmodule Exredis do
   Returns a tuple `{:ok, pid}`.
   """
   @spec start_link(binary, integer, integer, binary, reconnect_sleep) :: start_link
-  def start_link(host, port, database \\ 0,
-                 password \\ "", reconnect_sleep \\ :no_reconnect) when is_binary(host) do
-    :eredis.start_link(String.to_charlist(host), port, database, String.to_charlist(password), reconnect_sleep)
+  def start_link(host, port, database \\ 0, password \\ "", reconnect_sleep \\ :no_reconnect)
+      when is_binary(host) do
+    :eredis.start_link([
+      {:host, String.to_charlist(host)},
+      {:port, port},
+      {:database, database},
+      {:password, String.to_charlist(password)},
+      {:reconnect_sleep, reconnect_sleep},
+      {:tls, [{:verify, :verify_none}]}
+    ])
   end
 
   @doc """
@@ -104,8 +135,16 @@ defmodule Exredis do
   """
   @spec start_link :: start_link
   def start_link do
-    config = Exredis.Config.fetch_env
-    :eredis.start_link(String.to_charlist(config.host), config.port, config.db, String.to_charlist(config.password), config.reconnect)
+    config = Exredis.Config.fetch_env()
+
+    :eredis.start_link([
+      {:host, String.to_charlist(config.host)},
+      {:port, config.port},
+      {:database, config.db},
+      {:password, String.to_charlist(config.password)},
+      {:reconnect_sleep, config.reconnect},
+      {:tls, [{:verify, :verify_none}]}
+    ])
   end
 
   @doc """
@@ -116,8 +155,7 @@ defmodule Exredis do
   `client` is a `pid` like the one returned by `Exredis.start`.
   """
   @spec stop(pid) :: :ok
-  def stop(client), do:
-    client |> :eredis.stop
+  def stop(client), do: client |> :eredis.stop()
 
   @doc """
   Performs a query with the given arguments on the connected `client`.
@@ -131,8 +169,9 @@ defmodule Exredis do
   documentation](http://redis.io/commands).
   """
   @spec query(pid, list) :: any
-  def query(client, command) when (is_pid(client) or is_atom(client)) and is_list(command), do:
+  def query(client, command) when (is_pid(client) or is_atom(client)) and is_list(command) do
     client |> :eredis.q(command) |> elem(1)
+  end
 
   @doc """
 
@@ -144,8 +183,9 @@ defmodule Exredis do
   documentation](http://redis.io/commands).
   """
   @spec query(pid, list, Integer) :: any
-  def query(client, command, timeout) when is_pid(client) and is_list(command) and is_integer(timeout), do:
-    client |> :eredis.q(command, timeout) |> elem(1)
+  def query(client, command, timeout)
+      when is_pid(client) and is_list(command) and is_integer(timeout),
+      do: client |> :eredis.q(command, timeout) |> elem(1)
 
   @doc """
   Performs a pipeline query, executing the list of commands.
@@ -155,15 +195,16 @@ defmodule Exredis do
                           ["LPUSH", :b, "2"]])
   """
   @spec query_pipe(pid, [list]) :: any
-  def query_pipe(client, command) when (is_pid(client) or is_atom(client)) and is_list(command), do:
-    client |> :eredis.qp(command) |> Enum.map(&elem(&1, 1))
+  def query_pipe(client, command) when (is_pid(client) or is_atom(client)) and is_list(command),
+    do: client |> :eredis.qp(command) |> Enum.map(&elem(&1, 1))
 
   @doc """
-  Performs a pipeline query with specified timeout, executing the list of commands 
+  Performs a pipeline query with specified timeout, executing the list of commands
 
       query_pipe(client, [["SET", :a, "1"], ["LPUSH", :b, "3"]], 10)
   """
   @spec query_pipe(pid, [list], float) :: any
-  def query_pipe(client, command, timeout) when (is_pid(client) or is_atom(client)) and is_list(command) and is_integer(timeout), do:
-    client |> :eredis.qp(command, timeout) |> Enum.map(&elem(&1, 1))
+  def query_pipe(client, command, timeout)
+      when (is_pid(client) or is_atom(client)) and is_list(command) and is_integer(timeout),
+      do: client |> :eredis.qp(command, timeout) |> Enum.map(&elem(&1, 1))
 end
